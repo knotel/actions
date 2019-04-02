@@ -14,13 +14,11 @@ cat ~/services.json
 echo
 echo "CATTING OVER!!!"
 
-FILE="~/services.json"
-
-if [ ! -f ${FILE} ]; then
+if [ ! -f services.json ]; then
   echo "Services File does not exist."
   exit 1
 else
-  CHANGES=($(cat $FILE | jq -r '@sh'))
+  CHANGES=($(cat ~/services.json | jq -r '@sh'))
   for service in ${CHANGES[@]}; do
     #if the service starts with a dot, don't run snyk tests
     if [[ ${service:1:1} == "." ]]; then
@@ -28,12 +26,11 @@ else
       echo
     else
       cd ~/
-      echo "Running Snyk for Service: $service"
       cd ${service:1:${#service}-2}
       echo "Running Yarn Setup!"
       yarn
       echo
-      echo "Running Snyk Test!"
+      echo "Running Snyk for Service: $service"
       snyk test
       echo
     fi
