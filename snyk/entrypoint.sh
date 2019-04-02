@@ -2,7 +2,14 @@
 
 set -eu
 
-FILE="~/services.json"
+echo "RUNNING LS!"
+ls
+echo
+
+echo "CATTING services.json!"
+ls
+echo
+cat ~/services.json
 
 if [ ! -f ${FILE} ]; then
   echo "Services File does not exist."
