@@ -48,12 +48,10 @@ fs.writeFileSync(`${process.env.HOME}/files_modified.json`, JSON.stringify(FILES
 fs.writeFileSync(`${process.env.HOME}/files_added.json`, JSON.stringify(FILES_ADDED), 'utf-8');
 fs.writeFileSync(`${process.env.HOME}/files_deleted.json`, JSON.stringify(FILES_DELETED), 'utf-8');
 
-console.log("SERVICES")
-console.log("FILES")
-console.log("FILES_MODIFIED")
-console.log("FILES_ADDED")
-console.log("FILES_DELETED")
-
-
+console.log(fs.readFileSync(`${process.env.HOME}/services.json`, {encoding: 'utf-8'}))
+console.log(fs.readFileSync(`${process.env.HOME}/files.json`, {encoding: 'utf-8'}))
+console.log(fs.readFileSync(`${process.env.HOME}/files_modified.json`, {encoding: 'utf-8'}))
+console.log(fs.readFileSync(`${process.env.HOME}/files_added.json`, {encoding: 'utf-8'}))
+console.log(fs.readFileSync(`${process.env.HOME}/files_deleted.json`, {encoding: 'utf-8'}))
 
 process.exit(0);
