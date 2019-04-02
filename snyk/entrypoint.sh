@@ -2,11 +2,16 @@
 
 set -eu
 
-echo "RUNNING LS!"
+echo "LS -AL OUTPUT!"
 echo
-ls
+ls -al
 echo
-echo "LS OVER!!!"
+echo "LS -AL OVER!!!"
+echo
+echo "LS -AL ~ OUTPUT!"
+ls -al ~
+echo
+echo "LS -AL ~ OVER!!!"
 
 echo "CATTING services.json!"
 echo
