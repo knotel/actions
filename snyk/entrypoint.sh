@@ -3,13 +3,18 @@
 set -eu
 
 echo "RUNNING LS!"
+echo
 ls
 echo
+echo "LS OVER!!!"
 
 echo "CATTING services.json!"
-ls
 echo
 cat ~/services.json
+echo
+echo "CATTING OVER!!!"
+
+FILE="~/services.json"
 
 if [ ! -f ${FILE} ]; then
   echo "Services File does not exist."
