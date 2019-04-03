@@ -13,7 +13,7 @@ workflow "Tests" {
 }
 
 action "Dependencies" {
-  uses = "actions/npm@master"
+  uses = "Knotel/actions/yarn@master"
   args = "install"
 }
 
@@ -32,20 +32,11 @@ action "Jest" {
 ### Environment variables
 
 * `JEST_CMD` - **Optional**. The path the Jest command - defaults to `./node_modules/.bin/jest`.
+(not needed for the mono-repo style run)
 
 #### Example
 
-To run Jest, either use the published docker image ...
-
-```hcl
-action "Jest" {
-  uses = "knotel/actions/jest@master"
-  secrets = ["GITHUB_TOKEN"]
-  args = ""
-}
-```
-
-... or the Github repo:
+To run Jest, use the Github repo:
 
 ```hcl
 action "Jest" {
