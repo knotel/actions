@@ -24,5 +24,6 @@ LABEL com.github.actions.color="black"
 ENV JEST_CMD ./node_modules/.bin/jest
 COPY entrypoint.sh /entrypoint.sh
 
+WORKDIR ~/
 ENTRYPOINT ["/entrypoint.sh"]
 CMD [""]
