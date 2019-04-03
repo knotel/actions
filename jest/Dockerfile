@@ -1,7 +1,7 @@
 FROM golang:alpine3.8 as builder
 
 RUN apk --update upgrade
-RUN apk --no-cache --no-progress add make git gcc musl-dev
+RUN apk --no-cache --no-progress add make git gcc musl-dev jq
 
 WORKDIR /build
 COPY . .
