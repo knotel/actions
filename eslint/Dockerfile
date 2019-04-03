@@ -7,7 +7,8 @@ WORKDIR /build
 COPY . .
 RUN go build .
 
-WORKDIR /build
+FROM node:10-alpine
+RUN apk update && apk add --no-cache --virtual ca-certificates
 COPY --from=builder /build/eslint-action /usr/bin/eslint-action
 
 LABEL version="1.0.0"
