@@ -1,4 +1,4 @@
-# Github Action for ESLint (with Annotations)
+# Github Action for ESLint (with Annotations) in a Mono-Repo
 
 This Action runs [ESLint](https://github.com/eslint/eslint) on your codebase and adds annotations to the Github check the action is run in.
 
@@ -13,7 +13,7 @@ workflow "Lint" {
 }
 
 action "Dependencies" {
-  uses = "actions/npm@master"
+  uses = "Knotel/actions/yarn@master"
   args = "install"
 }
 
@@ -29,27 +29,13 @@ action "Eslint" {
 
 * `GITHUB_TOKEN` - **Required**. Required to add annotations to the check that is executing the Github action.
 
-### Environment variables
-
-* `ESLINT_CMD` - **Optional**. The path the ESLint command - defaults to `./node_modules/.bin/eslint`.
-
 #### Example
 
-To run ESLint, either use the published docker image ...
-
+To run ESLint, use the Github repo:
+ 
 ```hcl
 action "Eslint" {
-  uses = "docker://rkusa/eslint-action:latest"
-  secrets = ["GITHUB_TOKEN"]
-  args = ""
-}
-```
-
-... or the Github repo:
-
-```hcl
-action "Eslint" {
-  uses = "rkusa/eslint-action@master"
+  uses = "Knotel/actions/eslint@master"
   secrets = ["GITHUB_TOKEN"]
   args = ""
 }
