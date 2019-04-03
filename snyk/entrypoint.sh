@@ -5,6 +5,8 @@
 
 if [ ! -f ~/services.json ]; then
   echo "Services File does not exist."
+  echo "Please install the changes action at https://github.com/Knotel/actions/changes"
+  echo "You will need to install dependencies before running this action."
   exit 1
 else
   CHANGES=($(cat ~/services.json | jq -r '@sh'))
@@ -16,9 +18,6 @@ else
     else
       cd /github/workspace
       cd ${service:1:${#service}-2}
-      echo "Running Yarn Setup!"
-      yarn
-      echo
       echo "Running Snyk for Service: $service"
       snyk test
       echo
