@@ -1,7 +1,9 @@
 #!/bin/bash -l
 
 set -eu
-
+echo "PWD OUTPUT!"
+pwd
+echo "PWD OUTPUT OVER!!!"
 echo "LS -AL OUTPUT!"
 echo
 ls -al
