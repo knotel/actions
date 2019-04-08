@@ -77,6 +77,8 @@ function eslint() {
     })
   })
 
+  console.log(result)
+
   return result
 }
 
@@ -120,9 +122,10 @@ function chunk(array, size) {
 async function run() {
   const id = await createCheck()
   try {
-    const output = eslint()
+    const pages = eslint()
+    console.log({ pages })
     console.log(output.summary)
-    await updateCheck(output)
+    await updateCheck(pages)
     if (conclusion === 'failure') {
       process.exit(78)
     }
