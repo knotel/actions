@@ -11,7 +11,18 @@ if [ ! -f ~/services.json ]; then
   echo "You will need to install dependencies before running this action."
   exit 1
 else
-  node /action/run.js
+  CHANGES=($(cat ~/services.json | jq -r '@sh'))
+  for service in ${CHANGES[@]}; do
+    #if the service starts with a dot, don't run snyk tests
+    if [[ ${service:1:1} == "." ]]; then
+      echo "Skipping running in $service. (Hidden Folder)"
+      echo
+    else
+      cd /github/workspace
+      cd ${service:1:${#service}-2}
+      echo "Running eslint $* inside of ${service:1:${#service}-2}"
+      node /action/run.js
+      echo
+    fi
+  done
 fi
-
-

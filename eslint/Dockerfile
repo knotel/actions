@@ -20,7 +20,7 @@ LABEL com.github.actions.description="Execute ESLint and add linting error annot
 LABEL com.github.actions.icon="octagon"
 LABEL com.github.actions.color="black"
 
-ENV NODE_PATH node
+ENV NODE_PATH ./node_modules
 COPY . /action
 COPY entrypoint.sh /entrypoint.sh
 

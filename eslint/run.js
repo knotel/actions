@@ -35,16 +35,10 @@ async function createCheck() {
 }
 
 function eslint() {
-  const path = require('path')
-  const fs = require('fs')
   const eslint = require('eslint')
 
   const cli = new eslint.CLIEngine()
-
-  // need to read ~/files.json to get files to lint
-  const files_json = fs.readFileSync(path.join(process.env['HOME'], 'files.json'), 'utf8')
-  const report = cli.executeOnFiles(files_json)
-
+  const report = cli.executeOnFiles(['.'])
   // fixableErrorCount, fixableWarningCount are available too
   const { results, errorCount, warningCount } = report
 
