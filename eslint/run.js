@@ -61,37 +61,32 @@ function eslint() {
     }
   }
 
-
   const pages = chunk(annotations, 50)
 
-  const result = []
-
-  pages.forEach(page => {
-    result.push({
+  return {
       conclusion: errorCount > 0 ? 'failure' : 'success',
       output: {
         title: checkName,
         summary: `${errorCount} error(s), ${warningCount} warning(s) found`,
-        annotations: page,
-      }
-    })
-  })
-
-  console.log(result)
-
-  return result
+      },
+      pages,
+    }
 }
 
-async function updateCheck(pages) {
+async function updateCheck(id, conclusion, output, pages) {
   console.log('inside updateCheck: ', pages[0])
+
   for (const page of pages) {
+
+    output.annotations = page
+
     const body = {
       name: checkName,
       head_sha: GITHUB_SHA,
       status: 'completed',
       completed_at: new Date(),
-      conclusion: page.conclusion,
-      output: page.output,
+      conclusion,
+      output,
     }
 
     await request(`https://api.github.com/repos/${owner}/${repo}/check-runs/${id}`, {
@@ -100,23 +95,6 @@ async function updateCheck(pages) {
       body
     })
   }
-}
-
-async function idUpdateCheck(id, conclusion, output) {
-  const body = {
-    name: checkName,
-    head_sha: GITHUB_SHA,
-    status: 'completed',
-    completed_at: new Date(),
-    conclusion,
-    output
-  }
-
-  await request(`https://api.github.com/repos/${owner}/${repo}/check-runs/${id}`, {
-    method: 'PATCH',
-    headers,
-    body
-  })
 }
 
 function exitWithError(err) {
@@ -140,14 +118,14 @@ function chunk(array, size) {
 async function run() {
   const id = await createCheck()
   try {
-    const pages = eslint()
+    const { conclusion, output, pages } = eslint()
     console.log(output.summary)
-    await updateCheck(pages)
+    await updateCheck(id, conclusion, output, pages)
     if (conclusion === 'failure') {
       process.exit(78)
     }
   } catch (err) {
-    await idUpdateCheck(id, 'failure')
+    await updateCheck(id, 'failure')
     exitWithError(err)
   }
 }
