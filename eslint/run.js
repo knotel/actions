@@ -81,14 +81,14 @@ function eslint() {
 }
 
 async function updateCheck(pages) {
-  pages.forEach(({conclusion, output}) => {
+  for (const page of pages) {
     const body = {
       name: checkName,
       head_sha: GITHUB_SHA,
       status: 'completed',
       completed_at: new Date(),
-      conclusion,
-      output
+      conclusion: page.conclusion,
+      output: page.output,
     }
 
     await request(`https://api.github.com/repos/${owner}/${repo}/check-runs/${id}`, {
@@ -96,7 +96,7 @@ async function updateCheck(pages) {
       headers,
       body
     })
-  })
+  }
 }
 
 function exitWithError(err) {
