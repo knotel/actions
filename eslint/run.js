@@ -102,6 +102,23 @@ async function updateCheck(pages) {
   }
 }
 
+async function idUpdateCheck(id, conclusion, output) {
+  const body = {
+    name: checkName,
+    head_sha: GITHUB_SHA,
+    status: 'completed',
+    completed_at: new Date(),
+    conclusion,
+    output
+  }
+
+  await request(`https://api.github.com/repos/${owner}/${repo}/check-runs/${id}`, {
+    method: 'PATCH',
+    headers,
+    body
+  })
+}
+
 function exitWithError(err) {
   console.error('Error', err.stack)
   if (err.data) {
@@ -130,7 +147,7 @@ async function run() {
       process.exit(78)
     }
   } catch (err) {
-    await updateCheck(id, 'failure')
+    await idUpdateCheck(id, 'failure')
     exitWithError(err)
   }
 }
