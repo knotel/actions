@@ -19,10 +19,14 @@ else
     else
       cd /github/workspace
       cd ${service:1:${#service}-2}
-      echo "Running Jest for Service: $service"
-      $JEST_CMD $* --ci --testLocationInResults --json --outputFile=report.json &> /dev/null
-      cat report.json | /usr/bin/jest-action
-      echo
+      if [ ! -f /usr/bin/jest-action ]; then
+        echo "Error! /usr/bin/jest-action File does not exist!"
+      else
+        echo "Running Jest for Service: $service"
+        $JEST_CMD $* --ci --testLocationInResults --json --outputFile=report.json &> /dev/null
+        cat report.json | /usr/bin/jest-action
+        echo
+      fi
     fi
   done
 fi

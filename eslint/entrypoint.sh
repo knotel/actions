@@ -20,8 +20,12 @@ else
     else
       cd /github/workspace
       cd ${service:1:${#service}-2}
-      echo "Running eslint for Service: $service"
-      ./node_modules/.bin/eslint $* --format json . | /usr/bin/eslint-action
+      if [ ! -f /usr/bin/eslint-action ]; then
+        echo "Error! /usr/bin/eslint-action File does not exist!"
+      else
+        echo "Running eslint for Service: $service"
+        $ESLINT_CMD $* --format json . | /usr/bin/eslint-action
+      fi
       echo
     fi
   done
