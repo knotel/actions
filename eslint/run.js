@@ -61,31 +61,42 @@ function eslint() {
     }
   }
 
-  return {
-    conclusion: errorCount > 0 ? 'failure' : 'success',
-    output: {
-      title: checkName,
-      summary: `${errorCount} error(s), ${warningCount} warning(s) found`,
-      annotations
-    }
+
+  const pages = chunk(annotations, 50)
+
+  const result = []
+
+  pages.forEach(page => {
+    result.push({
+      conclusion: errorCount > 0 ? 'failure' : 'success',
+      output: {
+        title: checkName,
+        summary: `${errorCount} error(s), ${warningCount} warning(s) found`,
+        annotations: page,
+      }
+    })
   }
+
+  return result
 }
 
-async function updateCheck(id, conclusion, output) {
-  const body = {
-    name: checkName,
-    head_sha: GITHUB_SHA,
-    status: 'completed',
-    completed_at: new Date(),
-    conclusion,
-    output
-  }
+async function updateCheck(pages) {
+  pages.forEach(({conclusion, output}) => {
+    const body = {
+      name: checkName,
+      head_sha: GITHUB_SHA,
+      status: 'completed',
+      completed_at: new Date(),
+      conclusion,
+      output
+    }
 
-  await request(`https://api.github.com/repos/${owner}/${repo}/check-runs/${id}`, {
-    method: 'PATCH',
-    headers,
-    body
-  })
+    await request(`https://api.github.com/repos/${owner}/${repo}/check-runs/${id}`, {
+      method: 'PATCH',
+      headers,
+      body
+    })
+  }
 }
 
 function exitWithError(err) {
@@ -96,12 +107,22 @@ function exitWithError(err) {
   process.exit(1)
 }
 
+function chunk(array, size) {
+  const chunked_arr = [];
+  let copied = [...array]; // ES6 destructuring
+  const numOfChild = Math.ceil(copied.length / size); // Round up to the nearest integer
+  for (let i = 0; i < numOfChild; i++) {
+    chunked_arr.push(copied.splice(0, size));
+  }
+  return chunked_arr;
+}
+
 async function run() {
   const id = await createCheck()
   try {
-    const { conclusion, output } = eslint()
+    const output = eslint()
     console.log(output.summary)
-    await updateCheck(id, conclusion, output)
+    await updateCheck(output)
     if (conclusion === 'failure') {
       process.exit(78)
     }
