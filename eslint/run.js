@@ -75,7 +75,7 @@ function eslint() {
         annotations: page,
       }
     })
-  }
+  })
 
   return result
 }
@@ -96,7 +96,7 @@ async function updateCheck(pages) {
       headers,
       body
     })
-  }
+  })
 }
 
 function exitWithError(err) {
