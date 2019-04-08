@@ -11,7 +11,7 @@ if [ ! -f ~/services.json ]; then
   echo "You will need to install dependencies before running this action."
   exit 1
 else
-  node /action/lib/run.js
+  node /action/run.js
 fi
 
 

@@ -21,6 +21,7 @@ LABEL com.github.actions.icon="octagon"
 LABEL com.github.actions.color="black"
 
 ENV NODE_PATH node
+COPY . /action
 COPY entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
