@@ -83,6 +83,7 @@ function eslint() {
 }
 
 async function updateCheck(pages) {
+  console.log('inside updateCheck: ', pages[0])
   for (const page of pages) {
     const body = {
       name: checkName,
@@ -123,7 +124,6 @@ async function run() {
   const id = await createCheck()
   try {
     const pages = eslint()
-    console.log({ pages })
     console.log(output.summary)
     await updateCheck(pages)
     if (conclusion === 'failure') {
