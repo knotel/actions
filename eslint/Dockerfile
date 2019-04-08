@@ -8,7 +8,7 @@ COPY . .
 RUN go build .
 
 FROM node:10-alpine
-RUN apk update && apk add --no-cache --virtual ca-certificates
+RUN apk update && apk add --no-cache --virtual ca-certificates jq bash
 COPY --from=builder /build/eslint-action /usr/bin/eslint-action
 
 LABEL version="1.0.0"
