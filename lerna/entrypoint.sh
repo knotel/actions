@@ -32,7 +32,7 @@ set -eu
 
 if [[ $1 == "slack_changed" ]]; then
   cd /github/workspace
-  lerna changed -la | /bin/slack chat send --channel ${channel} --pretext ${pretext} --color ${color}
+  lerna changed -la | /bin/slack chat send --channel ${SLACK_CHANNEL} --pretext ${SLACK_PRETEXT} --color ${SLACK_COLOR}
 else
   cd /github/workspace
   lerna $*
