@@ -45,7 +45,6 @@ MESSAGE="Hello, I have detected a change in \`${REPO}\`/\`${1}\` and thought I s
 
 for change in ${CHANGES[@]}; do
   if [[ "$change" = "$1" ]]; then
-    cd /github/workspace
     slack chat send \
       --actions '{"type": "button", "style": "primary", "text": "Last Commit to this File", "url": "${COMMIT_URL"}, {"type": "button", "style": "secondary", "text": "Link to File", "url": "${FILE_URL}"' \
       --author 'DATABOT' \
