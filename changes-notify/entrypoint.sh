@@ -1,6 +1,7 @@
-#!/bin/bash
+#!/bin/bash -l
 
 set -eu
+set -o pipefail
 
 # $1 = file to look against
 # $2 = slack channel to notify
@@ -43,8 +44,14 @@ FILE_URL="https://github.com/${ORG}/${REPO}/tree/${BRANCH}/${1}"
 COMMIT_URL="https://github.com/${ORG}/${REPO}/commit/${COMMIT}"
 MESSAGE="Hello, I have detected a change in \`${REPO}\`/\`${1}\` and thought I should warn you! \nBoop Beep I am a robot!"
 
+echo "Arg 1: ${1}"
+echo
+echo "Arg 2: ${2}"
+echo
+
 for change in ${CHANGES[@]}; do
   if [[ "$change" = "$1" ]]; then
+    echo "Sending Slack Notification!"
     slack chat send \
       --actions '{"type": "button", "style": "primary", "text": "Last Commit to this File", "url": "${COMMIT_URL"}, {"type": "button", "style": "secondary", "text": "Link to File", "url": "${FILE_URL}"' \
       --author 'DATABOT' \
