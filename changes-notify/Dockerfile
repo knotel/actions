@@ -12,4 +12,6 @@ LABEL com.github.actions.description="Notify upon detection of specific file cha
 LABEL com.github.actions.icon=file
 LABEL com.github.actions.color=gray-dark
 
+ADD entrypoint.sh /entrypoint.sh
+
 ENTRYPOINT ["/entrypoint.sh"]
