@@ -1,6 +1,6 @@
 FROM node:lts
 
-ENV LERNA_VERSION 3.11.2
+ENV LERNA_VERSION 3.13.2
 
 # Install packages.
 RUN apt-get update && \
