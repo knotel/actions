@@ -1,5 +1,6 @@
 #!/bin/bash -l
 
+set -o xtrace
 set -eu
 set -o pipefail
 
@@ -33,6 +34,7 @@ set -o pipefail
 # ${footer-icon} = 'https://assets-cdn.github.com/images/modules/logos_page/Octocat.png'
 # ${actions}     = '{"type": "button", "style": "primary", "text": "See results", "url": "http://example.com"}'
 # ${image}       = "https://assets-cdn.github.com/images/modules/logos_page/Octocat.png"
+
 if [ ! -f ~/services.json ]; then
   echo "Services File does not exist."
   echo "Please install the changes action at https://github.com/Knotel/actions/changes"
@@ -41,13 +43,20 @@ if [ ! -f ~/services.json ]; then
 else
   CHANGES=($(cat ~/files.json | jq -r '.[]' ))
   BRANCH=$(cd /github/workspace && git rev-parse --abbrev-ref HEAD)
-  COMMIT=$(cd /github/workspace && git log -n 1 --pretty=format:%H -- ${1})
-  ORG=$(git config --get remote.origin.url | sed -e "s/.*github.com.\(.*\)\/\(.*\)/\1/")
+  COMMIT=$(cd /github/workspace && git log -n 1 --pretty=format:%H)
+  ORG=$(cd /github/workspace && git config --get remote.origin.url | sed -e "s/.*github.com.\(.*\)\/\(.*\)/\1/")
   REPO=$(cd /github/workspace && basename `git rev-parse --show-toplevel`)
   REMOTE=$(cd /github/workspace && git config --get remote.origin.url)
   FILE_URL="https://github.com/${ORG}/${REPO}/tree/${BRANCH}/${1}"
   COMMIT_URL="https://github.com/${ORG}/${REPO}/commit/${COMMIT}"
-  MESSAGE="Hello, I have detected a change in \`${REPO}\`/\`${1}\` and thought I should warn you! \nBoop Beep I am a robot!"
+  MESSAGE="Hello, I have detected a change in \`${ORG}\`/\`${REPO}\`/\`${1}\` and thought I should warn you! \nBoop Beep I am a robot!"
+  ACTIONS="{\"type\": \"button\", \"style\": \"primary\", \"text\": \"See Last Commit\", \"url\": \""
+  ACTIONS+="${COMMIT_URL}"
+  ACTIONS+="\"}"
+  ACTIONS+=",{\"type\": \"button\", \"style\": \"secondary\", \"text\": \"Link to File\", \"url\": \""
+  ACTIONS+="${FILE_URL}"
+  ACTIONS+="\"}"
+
 
   echo "Arg 1: ${1}"
   echo
@@ -58,12 +67,13 @@ else
     if [[ "$change" = "$1" ]]; then
       echo "Sending Slack Notification!"
       slack chat send \
-        --actions '{"type": "button", "style": "primary", "text": "Last Commit to this File", "url": "${COMMIT_URL"}, {"type": "button", "style": "secondary", "text": "Link to File", "url": "${FILE_URL}"' \
-        --author 'DATABOT' \
-        --channel '$2' \
+        --actions "${ACTIONS}" \
+        --author 'GABot' \
+        --channel "$2" \
         --color bad \
-        --fields '{"title": "Github Action: changed-notify", "short": false}' \
-        --text '${MESSAGE}'
+        --footer 'Brought to you by Github Actions!' \
+        --text "${MESSAGE}" \
+        --title "File changes detected!"
     fi
   done
 fi
