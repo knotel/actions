@@ -35,7 +35,7 @@ set -o pipefail
 # ${actions}     = '{"type": "button", "style": "primary", "text": "See results", "url": "http://example.com"}'
 # ${image}       = "https://assets-cdn.github.com/images/modules/logos_page/Octocat.png"
 
-ls -al /github/workspace
+ls -al /github/workspace/.git
 
 if [ ! -f ~/services.json ]; then
   echo "Services File does not exist."
@@ -44,11 +44,11 @@ if [ ! -f ~/services.json ]; then
   exit 1
 else
   CHANGES=($(cat ~/files.json | jq -r '.[]' ))
-  BRANCH=$(cd /github/workspace && git rev-parse --abbrev-ref HEAD)
-  COMMIT=$(cd /github/workspace && git log -n 1 --pretty=format:%H)
-  ORG=$(cd /github/workspace && git config --get remote.origin.url | sed -e "s/.*github.com.\(.*\)\/\(.*\)/\1/")
-  REPO=$(basename $(cd /github/workspace && git rev-parse --show-toplevel))
-  REMOTE=$(cd /github/workspace && git config --get remote.origin.url)
+  BRANCH=$(git rev-parse --abbrev-ref HEAD)
+  COMMIT=$(git log -n 1 --pretty=format:%H)
+  ORG=$(git config --get remote.origin.url | sed -e "s/.*github.com.\(.*\)\/\(.*\)/\1/")
+  REPO=$(basename `git rev-parse --show-toplevel`)
+  REMOTE=$(git config --get remote.origin.url)
   FILE_URL="https://github.com/${ORG}/${REPO}/tree/${BRANCH}/${1}"
   COMMIT_URL="https://github.com/${ORG}/${REPO}/commit/${COMMIT}"
   MESSAGE="Hello, I have detected a change in \`${ORG}\`/\`${REPO}\`/\`${1}\` and thought I should warn you! \nBoop Beep I am a robot!"
