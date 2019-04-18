@@ -35,8 +35,6 @@ set -o pipefail
 # ${actions}     = '{"type": "button", "style": "primary", "text": "See results", "url": "http://example.com"}'
 # ${image}       = "https://assets-cdn.github.com/images/modules/logos_page/Octocat.png"
 
-ls -al /github/workspace/.git
-
 if [ ! -f ~/services.json ]; then
   echo "Services File does not exist."
   echo "Please install the changes action at https://github.com/Knotel/actions/changes"
@@ -47,7 +45,7 @@ else
   BRANCH=$(git rev-parse --abbrev-ref HEAD)
   COMMIT=$(git log -n 1 --pretty=format:%H)
   ORG=$(git config --get remote.origin.url | sed -e "s/.*github.com.\(.*\)\/\(.*\)/\1/")
-  REPO=$(basename `git rev-parse --show-toplevel`)
+  REPO=$(basename $(git remote get-url origin) .git)
   REMOTE=$(git config --get remote.origin.url)
   FILE_URL="https://github.com/${ORG}/${REPO}/tree/${BRANCH}/${1}"
   COMMIT_URL="https://github.com/${ORG}/${REPO}/commit/${COMMIT}"
