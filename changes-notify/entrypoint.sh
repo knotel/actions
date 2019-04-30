@@ -1,6 +1,6 @@
 #!/bin/bash -l
 
-set -o xtrace
+# set -o xtrace
 set -eu
 set -o pipefail
 
@@ -54,18 +54,14 @@ else
   ACTIONS+="${COMMIT_URL}"
   ACTIONS+="\"}"
 
-  echo "Arg 1: ${1}"
-
-  echo "${MESSAGE}\n\n"
-
-  echo "${EXPECTED_CHANGES}\n\n"
-
   NOTIFY_FILES=()
   for change in ${CHANGES[@]}; do
-    if [[ $(printf "_[%s]_" "${EXPECTED_CHANGES[@]}") =~ .*_\[$change\]_.* ]]; then
+    if printf '%s\n' ${EXPECTED_CHANGES[@]} | grep -q -P "^${$change}$"; then
       NOTIFY_FILES+=("$change")
     fi
   done
+
+  echo "${NOTIFY_FILES[@]}"
   # if change in expected changes, add to list.
   # fi
   # send single slack notification with full list of file changes.
@@ -83,7 +79,7 @@ else
       --color bad \
       --footer 'Brought to you by Github Actions!' \
       --text "${MESSAGE}\n" \
-      --title "File changes detected!"
+      --title "${TITLE}"
   fi
 
 fi
