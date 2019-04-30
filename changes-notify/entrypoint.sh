@@ -47,33 +47,41 @@ else
   ORG=$(git config --get remote.origin.url | sed -e "s/.*github.com.\(.*\)\/\(.*\)/\1/")
   REPO=$(basename $(git remote get-url origin) .git)
   REMOTE=$(git config --get remote.origin.url)
-  FILE_URL="https://github.com/${ORG}/${REPO}/tree/${BRANCH}/${1}"
   COMMIT_URL="https://github.com/${ORG}/${REPO}/commit/${COMMIT}"
-  MESSAGE="Hello, I have detected a change in \`${ORG}\`/\`${REPO}\`/\`${1}\` and thought I should warn you! \nBoop Beep I am a robot!"
+  # TODO: This should be an environment variable, to customize the message text.
+  #MESSAGE="Hello, I have detected a change in \`${ORG}\`/\`${REPO}\`/\`${1}\` and thought I should warn you! \nBoop Beep I am a robot!"
   ACTIONS="{\"type\": \"button\", \"style\": \"primary\", \"text\": \"See Last Commit\", \"url\": \""
   ACTIONS+="${COMMIT_URL}"
   ACTIONS+="\"}"
-  ACTIONS+=",{\"type\": \"button\", \"style\": \"secondary\", \"text\": \"Link to File\", \"url\": \""
-  ACTIONS+="${FILE_URL}"
-  ACTIONS+="\"}"
-
 
   echo "Arg 1: ${1}"
   echo
   echo "Arg 2: ${2}"
   echo
 
+  NOTIFY_FILES=()
   for change in ${CHANGES[@]}; do
-    if [[ "$change" = "$1" ]]; then
-      echo "Sending Slack Notification!"
-      slack chat send \
-        --actions "${ACTIONS}" \
-        --author 'GABot' \
-        --channel "$2" \
-        --color bad \
-        --footer 'Brought to you by Github Actions!' \
-        --text "${MESSAGE}" \
-        --title "File changes detected!"
+    if [[ $(printf "_[%s]_" "${EXPECTED_CHANGES[@]}") =~ .*_\[$change\]_.* ]]; then
+      NOTIFY_FILES+=("$change")
     fi
   done
+  # if change in expected changes, add to list.
+  # fi
+  # send single slack notification with full list of file changes.
+  if [ ${#NOTIFY_FILES[@]} -gt 0 ]; then
+
+    for file in ${NOTIFY_FILES[@]}; do
+      MESSAGE+="\n- ${file}"
+    done
+    echo "Sending Slack Notification!"
+    slack chat send \
+      --actions "${ACTIONS}" \
+      --author 'GABot' \
+      --channel "$2" \
+      --color bad \
+      --footer 'Brought to you by Github Actions!' \
+      --text "${MESSAGE}\n" \
+      --title "File changes detected!"
+  fi
+
 fi
