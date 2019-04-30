@@ -56,8 +56,6 @@ else
 
   echo "Arg 1: ${1}"
   echo
-  echo "Arg 2: ${2}"
-  echo
 
   NOTIFY_FILES=()
   for change in ${CHANGES[@]}; do
@@ -77,7 +75,7 @@ else
     slack chat send \
       --actions "${ACTIONS}" \
       --author 'GABot' \
-      --channel "$2" \
+      --channel "$1" \
       --color bad \
       --footer 'Brought to you by Github Actions!' \
       --text "${MESSAGE}\n" \
