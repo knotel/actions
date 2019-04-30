@@ -54,9 +54,10 @@ else
   ACTIONS+="${COMMIT_URL}"
   ACTIONS+="\"}"
 
+  EXPECTED_CHANGES_ARR=($EXPECTED_CHANGES)
   NOTIFY_FILES=()
-  for change in ${CHANGES[@]}; do
-    if printf '%s\n' ${EXPECTED_CHANGES[@]} | grep -q -P "^${$change}$"; then
+  for change in "${CHANGES[@]}"; done
+    if (printf '%s\n' "${EXPECTED_CHANGES_ARR[@]}" | grep -xq $change); then
       NOTIFY_FILES+=("$change")
     fi
   done
