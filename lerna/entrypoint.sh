@@ -1,6 +1,8 @@
-#!/bin/bash
+#!/bin/bash -l
 
+set -o xtrace
 set -eu
+set -o pipefail
 
 #slack chat send \
 #  --actions ${actions} \
@@ -30,10 +32,23 @@ set -eu
 # ${actions}     = '{"type": "button", "style": "primary", "text": "See results", "url": "http://example.com"}'
 # ${image}       = "https://assets-cdn.github.com/images/modules/logos_page/Octocat.png"
 
-if [[ $1 == "slack_changed" ]]; then
+if [ "$BOOTSTRAP" = true ]; then
   cd /github/workspace
-  lerna changed -la | /bin/slack chat send --channel ${SLACK_CHANNEL} --pretext ${SLACK_PRETEXT} --color ${SLACK_COLOR}
-else
-  cd /github/workspace
-  lerna $*
+  lerna boostrap --concurrency=2
 fi
+
+if [ "$REMINDER" = true ]; then
+  cd /github/workspace
+  LERNA_CHANGED=$(cd /github/workspace && lerna changed -la)
+  echo ${LERNA_CHANGED} | /bin/slack chat send --channel ${CHANNEL} --pretext ${PRETEXT} --color ${COLOR}
+fi
+
+if [ "$PUBLISH" = true ]; then
+  cd /github/workspace
+  LERNA_CHANGED=$(cd /github/workspace && lerna changed -la)
+  PRETEXT="These packages are about to published to npm!:"
+  echo ${LERNA_CHANGED} | /bin/slack chat send --channel ${CHANNEL} --pretext ${PRETEXT} --color ${COLOR}
+  lerna publish minor --yes
+  echo "Done publishing!" | /bin/slack chat send --channel ${CHANNEL} --color good
+fi
+
