@@ -55,7 +55,10 @@ else
   ACTIONS+="\"}"
 
   echo "Arg 1: ${1}"
-  echo
+
+  echo "${MESSAGE}\n\n"
+
+  echo "${EXPECTED_CHANGES}\n\n"
 
   NOTIFY_FILES=()
   for change in ${CHANGES[@]}; do
@@ -71,6 +74,7 @@ else
     for file in ${NOTIFY_FILES[@]}; do
       MESSAGE+="\n- ${file}"
     done
+
     echo "Sending Slack Notification!"
     slack chat send \
       --actions "${ACTIONS}" \
