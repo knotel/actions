@@ -48,12 +48,11 @@ else
   REPO=$(basename $(git remote get-url origin) .git)
   REMOTE=$(git config --get remote.origin.url)
   COMMIT_URL="https://github.com/${ORG}/${REPO}/commit/${COMMIT}"
-  # TODO: This should be an environment variable, to customize the message text.
-  #MESSAGE="Hello, I have detected a change in \`${ORG}\`/\`${REPO}\`/\`${1}\` and thought I should warn you! \nBoop Beep I am a robot!"
   ACTIONS="{\"type\": \"button\", \"style\": \"primary\", \"text\": \"See Last Commit\", \"url\": \""
   ACTIONS+="${COMMIT_URL}"
   ACTIONS+="\"}"
 
+  # See if expected files were changed.
   EXPECTED_CHANGES_ARR=($EXPECTED_CHANGES)
   NOTIFY_FILES=()
   for change in "${CHANGES[@]}"; do
@@ -62,9 +61,22 @@ else
     fi
   done
 
-  echo "${NOTIFY_FILES[@]}"
-  # if change in expected changes, add to list.
-  # fi
+  # Get list of projects where expected files were changed.
+  PROJECTS=()
+  for file in "${NOTIFY_FILES[@]}"; do
+    PROJECTS+="(cut -d'/' -f2 <<<'$file')"
+  done
+
+  echo "--- Files ---"
+  for file in "${NOTIFY_FILES[@]}"; do
+    echo " - $file"
+  done
+
+  echo "--- Projects ---"
+  for project in "${PROJECTS[@]}"; do
+    echo " - $project"
+  done
+
   # send single slack notification with full list of file changes.
   if [ ${#NOTIFY_FILES[@]} -gt 0 ]; then
 
