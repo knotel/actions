@@ -1,7 +1,7 @@
 #!/bin/bash -l
 
 # set -o xtrace
-set -eu
+set -e
 set -o pipefail
 
 # $1 = file to look against
@@ -48,6 +48,7 @@ else
   REPO=$(basename $(git remote get-url origin) .git)
   REMOTE=$(git config --get remote.origin.url)
   COMMIT_URL="https://github.com/${ORG}/${REPO}/commit/${COMMIT}"
+  MESSAGE_TEMPLATE="\`${ORG}\`/\`${REPO}\`/\`${1}\` \n"
   ACTIONS="{\"type\": \"button\", \"style\": \"primary\", \"text\": \"See Last Commit\", \"url\": \""
   ACTIONS+="${COMMIT_URL}"
   ACTIONS+="\"}"
@@ -61,28 +62,14 @@ else
     fi
   done
 
-  # Get list of projects where expected files were changed.
-  PROJECTS=()
-  for file in "${NOTIFY_FILES[@]}"; do
-    PROJECTS+="(cut -d'/' -f2 <<<'$file')"
-  done
-
-  echo "--- Files ---"
-  for file in "${NOTIFY_FILES[@]}"; do
-    echo " - $file"
-  done
-
-  echo "--- Projects ---"
-  for project in "${PROJECTS[@]}"; do
-    echo " - $project"
-  done
-
   # send single slack notification with full list of file changes.
   if [ ${#NOTIFY_FILES[@]} -gt 0 ]; then
 
+    MESSAGE+="\`\`\`"
     for file in ${NOTIFY_FILES[@]}; do
       MESSAGE+="\n- ${file}"
     done
+    MESSAGE+="\`\`\`"
 
     echo "Sending Slack Notification!"
     slack chat send \
