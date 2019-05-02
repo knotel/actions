@@ -1,9 +1,5 @@
 #!/bin/bash -l
 
-set -o xtrace
-set -eu
-set -o pipefail
-
 #slack chat send \
 #  --actions ${actions} \
 #  --author ${author} \
