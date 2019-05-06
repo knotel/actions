@@ -1,9 +1,5 @@
 #!/bin/bash -l
 
-# set -o xtrace
-set -e
-set -o pipefail
-
 # $1 = file to look against
 # $2 = slack channel to notify
 
