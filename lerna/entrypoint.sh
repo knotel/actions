@@ -36,8 +36,11 @@ fi
 
 if [ "$REMINDER" = true ]; then
   cd /github/workspace
-  LERNA_CHANGED=$(cd /github/workspace && lerna changed -la)
+  LERNA_CHANGED="\`\`\`"
+  LERNA_CHANGED+=$(cd /github/workspace && lerna changed -la)
+  LERNA_CHANGED+="\`\`\`"
   echo ${LERNA_CHANGED} | /bin/slack chat send --channel $CHANNEL --pretext ${PRETEXT} --color ${COLOR}
+
 fi
 
 if [ "$PUBLISH" = true ]; then
