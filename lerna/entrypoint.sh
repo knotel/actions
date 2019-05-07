@@ -39,7 +39,12 @@ if [ "$REMINDER" = true ]; then
   LERNA_CHANGED="\`\`\`"
   LERNA_CHANGED+=$(cd /github/workspace && lerna changed -la)
   LERNA_CHANGED+="\`\`\`"
-  echo ${LERNA_CHANGED} | /bin/slack chat send --channel $CHANNEL --pretext ${PRETEXT} --color ${COLOR}
+  /bin/slack chat send \
+    --author 'GABot' \
+    --channel $CHANNEL \
+    --color "${COLOR}" \
+    --footer 'Brought to you by Github Actions!' \
+    --text "${LERNA_CHANGED}"
 
 fi
 
@@ -47,7 +52,7 @@ if [ "$PUBLISH" = true ]; then
   cd /github/workspace
   LERNA_CHANGED=$(cd /github/workspace && lerna changed -la)
   PRETEXT="These packages are about to published to npm!:"
-  echo ${LERNA_CHANGED} | /bin/slack chat send --channel $CHANNEL --pretext ${PRETEXT} --color ${COLOR}
+  echo ${LERNA_CHANGED} | /bin/slack chat send --channel $CHANNEL --pretext "${PRETEXT}" --color "${COLOR}"
   cd /github/workspace
   lerna publish minor --yes
   echo "Done publishing!" | /bin/slack chat send --channel $CHANNEL --color good
