@@ -1,13 +1,14 @@
 #!/bin/bash -l
 
+set -x
+
 #slack chat send \
 #  --actions ${actions} \
 #  --author ${author} \
 #  --author-icon ${author_icon} \
 #  --author-link ${author-link} \
 #  --channel ${channel} \
-#  --color ${color} \
-#  --fields ${fields} \
+#  --color ${color} \ #  --fields ${fields} \
 #  --footer ${footer} \
 #  --footer-icon ${footer-icon} \
 #  --image '${image}' \
