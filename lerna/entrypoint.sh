@@ -43,6 +43,7 @@ if [ "$REMINDER" = true ]; then
     --author 'GABot' \
     --channel $CHANNEL \
     --color "${COLOR}" \
+    --pretext ${PRETEXT} \
     --footer 'Brought to you by Github Actions!' \
     --text "${LERNA_CHANGED}"
 
