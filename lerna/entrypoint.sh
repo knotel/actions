@@ -46,7 +46,12 @@ if [ "$REMINDER" = true ]; then
     --pretext "${PRETEXT}" \
     --footer 'Brought to you by Github Actions!' \
     --text "${LERNA_CHANGED}"
+fi
 
+if ["$CHANGED" = true]; then
+  cd /github/workspace
+  lerna changed --json > ~/changed.json
+  cat ~/changed.json
 fi
 
 if [ "$PUBLISH" = true ]; then
