@@ -5,6 +5,8 @@ set -x
 git config --global user.name 'Action Bronson'
 git config --global user.email 'product@knotel.com'
 
+
+
 #slack chat send \
 #  --actions ${actions} \
 #  --author ${author} \
@@ -59,11 +61,33 @@ fi
 
 if [ "$PUBLISH" = true ]; then
   cd /github/workspace
+  echo "Disabling Branch Protections! :try-not-to-cry:" | /bin/slack chat send --channel $CHANNEL --color "${COLOR}"
+  curl --request DELETE \
+    --url https://api.github.com/repos/knotel/mono/branches/master/protection/required_pull_request_reviews \
+    --header 'accept: application/vnd.github.luke-cage-preview+json' \
+    --header 'authorization: token $GITHUB_TOKEN' \
+    --header 'content-type: application/json'
   LERNA_CHANGED=$(cd /github/workspace && lerna changed -la)
   PRETEXT="These packages are about to published to npm!:"
   echo ${LERNA_CHANGED} | /bin/slack chat send --channel $CHANNEL --pretext "${PRETEXT}" --color "${COLOR}"
   cd /github/workspace
   lerna publish minor --yes
   echo "Done publishing! :fire:" | /bin/slack chat send --channel $CHANNEL --color good
+  echo "Enabling Branch Protections! :try-not-to-cry-party:" | /bin/slack chat send --channel $CHANNEL --color "${COLOR}"
+  curl https://api.github.com/repos/knotel/mono/branches/master \
+      -H "Authorization: token $GITHUB_TOKEEN" \
+      -H "Accept: application/vnd.github.luke-cage-preview+json" \
+      -X PATCH \
+      -d '{
+        "protection": {
+          "enabled": true,
+          "required_status_checks": {
+            "enforcement_level": "everyone",
+            "contexts": [
+              "default"
+            ]
+          }
+        }
+      }'
 fi
 
