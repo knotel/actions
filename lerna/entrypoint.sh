@@ -72,10 +72,10 @@ if [ "$PUBLISH" = true ]; then
   echo ${LERNA_CHANGED} | /bin/slack chat send --channel $CHANNEL --pretext "${PRETEXT}" --color "${COLOR}"
   cd /github/workspace
   lerna publish minor --yes
-  echo "Done publishing! :fire:" | /bin/slack chat send --channel $CHANNEL --color good
-  echo "Enabling Branch Protections! :try-not-to-cry-party:" | /bin/slack chat send --channel $CHANNEL --color "${COLOR}"
+  /bin/slack chat send --channel $CHANNEL --text "Done publishing! :fire:" --color good
+  /bin/slack chat send --channel $CHANNEL --text "Enabling Branch Protections! :try-not-to-cry-party:" --color "${COLOR}"
   curl https://api.github.com/repos/knotel/mono/branches/master \
-      -H "Authorization: token $GITHUB_TOKEEN" \
+      -H "Authorization: token $GITHUB_TOKEN" \
       -H "Accept: application/vnd.github.luke-cage-preview+json" \
       -X PATCH \
       -d '{
