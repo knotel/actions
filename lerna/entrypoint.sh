@@ -61,12 +61,12 @@ fi
 
 if [ "$PUBLISH" = true ]; then
   cd /github/workspace
-  echo "Disabling Branch Protections! :try-not-to-cry:" | /bin/slack chat send --channel $CHANNEL --color "${COLOR}"
+  /bin/slack chat send --channel $CHANNEL --text "Disabling Branch Protections! :try-not-to-cry:" --color "${COLOR}"
   curl --request DELETE \
     --url https://api.github.com/repos/knotel/mono/branches/master/protection/required_pull_request_reviews \
-    --header 'accept: application/vnd.github.luke-cage-preview+json' \
-    --header 'authorization: token $GITHUB_TOKEN' \
-    --header 'content-type: application/json'
+    --header "accept: application/vnd.github.luke-cage-preview+json" \
+    --header "authorization: token $GITHUB_TOKEN" \
+    --header "content-type: application/json"
   LERNA_CHANGED=$(cd /github/workspace && lerna changed -la)
   PRETEXT="These packages are about to published to npm!:"
   echo ${LERNA_CHANGED} | /bin/slack chat send --channel $CHANNEL --pretext "${PRETEXT}" --color "${COLOR}"
