@@ -53,7 +53,7 @@ if [ "$REMINDER" = true ]; then
     --text "${LERNA_CHANGED}"
 fi
 
-if ["$CHANGED" = true]; then
+if [ "$CHANGED" = true ]; then
   cd /github/workspace
   lerna changed --json > ~/changed.json
   cat ~/changed.json
