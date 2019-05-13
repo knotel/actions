@@ -2,6 +2,9 @@
 
 set -x
 
+git config --global user.name 'Action Bronson'
+git config --global user.email 'product@knotel.com'
+
 #slack chat send \
 #  --actions ${actions} \
 #  --author ${author} \
@@ -61,6 +64,6 @@ if [ "$PUBLISH" = true ]; then
   echo ${LERNA_CHANGED} | /bin/slack chat send --channel $CHANNEL --pretext "${PRETEXT}" --color "${COLOR}"
   cd /github/workspace
   lerna publish minor --yes
-  echo "Done publishing!" | /bin/slack chat send --channel $CHANNEL --color good
+  echo "Done publishing! :fire:" | /bin/slack chat send --channel $CHANNEL --color good
 fi
 
