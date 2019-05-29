@@ -1,93 +1,73 @@
 #!/bin/bash -l
 
+alias git=hub
+
 set -x
 
 git config --global user.name 'Action Bronson'
-git config --global user.email 'product@knotel.com'
 
+#GITHUB_TOKEN has to be set in the actions secrets
+# make sure not to have the default GITHUB_TOKEN checked on the action.
+# this was a workaround to branch protections and having actions run
+GITHUB_TOKEN=$KNOTELBUILD_TOKEN
+#GITHUB_USER has to be set in the actions secrets as well
 
-
-#slack chat send \
-#  --actions ${actions} \
-#  --author ${author} \
-#  --author-icon ${author_icon} \
-#  --author-link ${author-link} \
-#  --channel ${channel} \
-#  --color ${color} \ #  --fields ${fields} \
-#  --footer ${footer} \
-#  --footer-icon ${footer-icon} \
-#  --image '${image}' \
-#  --pretext '${pretext}' \
-#  --text '${slack-text}' \
-#  --time ${time} \
-#  --title ${title} \
-#  --title-link ${title-link}
-
-# ${title-link}  = 'https://github.com/knotel/actions/lerna'
-# ${fields}      = '{"title": "Environment", "value": "snapshot", "short": true}'
-# ${channel}     = '#channel'
-# ${author-link} = 'https://github.com/knotel/actions/lerna'
-# ${fields}      = '{"title": "Environment", "value": "snapshot", "short": true}'
-# ${author-link} = 'https://github.com/rockymadden/slack-cli'
-# ${author-icon} = 'https://assets-cdn.github.com/images/modules/logos_page/Octocat.png'
-# ${footer-icon} = 'https://assets-cdn.github.com/images/modules/logos_page/Octocat.png'
-# ${actions}     = '{"type": "button", "style": "primary", "text": "See results", "url": "http://example.com"}'
-# ${image}       = "https://assets-cdn.github.com/images/modules/logos_page/Octocat.png"
-
-if [ "$BOOTSTRAP" = true ]; then
+if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
+  echo "Not a merge commit... Pulling latest."
+  #or do a git pull?
   cd /github/workspace
-  lerna boostrap --concurrency=2
-fi
+  git pull
+  if [ $(git log -1 --pretty=%s) == "Publish" ]; then
+    echo "last commit was publish"
+    exit 78
+  fi
+else
+  echo "Last commit is a merge. Starting Lerna workflow."
+  # $(git log -1 --pretty=%s) to get the title of the last commit.
+  # We want to check if the last one is `Publish`, as that's the title
+  # that Lerna gives the publish commit.
 
-if [ "$REMINDER" = true ]; then
-  cd /github/workspace
-  LERNA_CHANGED="\`\`\`"
-  LERNA_CHANGED+=$(cd /github/workspace && lerna changed -la)
-  LERNA_CHANGED+="\`\`\`"
-  /bin/slack chat send \
-    --author 'GABot' \
-    --channel $CHANNEL \
-    --color "${COLOR}" \
-    --pretext "${PRETEXT}" \
-    --footer 'Brought to you by Github Actions!' \
-    --text "${LERNA_CHANGED}"
-fi
+  #slack chat send \
+  #  --actions ${actions} \
+  #  --author ${author} \
+  #  --author-icon ${author_icon} \
+  #  --author-link ${author-link} \
+  #  --channel ${channel} \
+  #  --color ${color} \ #  --fields ${fields} \
+  #  --footer ${footer} \
+  #  --footer-icon ${footer-icon} \
+  #  --image '${image}' \
+  #  --pretext '${pretext}' \
+  #  --text '${slack-text}' \
+  #  --time ${time} \
+  #  --title ${title} \
+  #  --title-link ${title-link}
 
-if [ "$CHANGED" = true ]; then
-  cd /github/workspace
+  # ${title-link}  = 'https://github.com/knotel/actions/lerna'
+  # ${fields}      = '{"title": "Environment", "value": "snapshot", "short": true}'
+  # ${channel}     = '#channel'
+  # ${author-link} = 'https://github.com/knotel/actions/lerna'
+  # ${fields}      = '{"title": "Environment", "value": "snapshot", "short": true}'
+  # ${author-link} = 'https://github.com/rockymadden/slack-cli'
+  # ${author-icon} = 'https://assets-cdn.github.com/images/modules/logos_page/Octocat.png'
+  # ${footer-icon} = 'https://assets-cdn.github.com/images/modules/logos_page/Octocat.png'
+  # ${actions}     = '{"type": "button", "style": "primary", "text": "See results", "url": "http://example.com"}'
+  # ${image}       = "https://assets-cdn.github.com/images/modules/logos_page/Octocat.png"
   lerna changed --json > ~/changed.json
   cat ~/changed.json
-fi
 
-if [ "$PUBLISH" = true ]; then
   cd /github/workspace
-  /bin/slack chat send --channel $CHANNEL --text "Disabling Branch Protections! :try-not-to-cry:" --color "${COLOR}"
-  curl --request DELETE \
-    --url https://api.github.com/repos/knotel/mono/branches/master/protection/required_pull_request_reviews \
-    --header "accept: application/vnd.github.luke-cage-preview+json" \
-    --header "authorization: token $GITHUB_TOKEN" \
-    --header "content-type: application/json"
+  LERNA_CHANGED="\`\`\`"
   LERNA_CHANGED=$(cd /github/workspace && lerna changed -la)
-  PRETEXT="These packages are about to published to npm!:"
-  echo ${LERNA_CHANGED} | /bin/slack chat send --channel $CHANNEL --pretext "${PRETEXT}" --color "${COLOR}"
+  LERNA_CHANGED+="\`\`\`"
+  PRETEXT="The following packages have had a minor version bump."
+  /bin/slack chat send \
+    --author 'Action Bronson' \
+    --channel $CHANNEL  \
+    --pretext "${PRETEXT}" \
+    --color "${COLOR}" \
+    --text "${LERNA_CHANGED}"
+
   cd /github/workspace
   lerna publish minor --yes
-  /bin/slack chat send --channel $CHANNEL --text "Done publishing! :fire:" --color good
-  /bin/slack chat send --channel $CHANNEL --text "Enabling Branch Protections! :try-not-to-cry-party:" --color "${COLOR}"
-  curl https://api.github.com/repos/knotel/mono/branches/master \
-      -H "Authorization: token $GITHUB_TOKEN" \
-      -H "Accept: application/vnd.github.luke-cage-preview+json" \
-      -X PATCH \
-      -d '{
-        "protection": {
-          "enabled": true,
-          "required_status_checks": {
-            "enforcement_level": "everyone",
-            "contexts": [
-              "default"
-            ]
-          }
-        }
-      }'
 fi
-
