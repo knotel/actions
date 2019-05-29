@@ -4,8 +4,8 @@ alias git=hub
 
 set -x
 
+git config --global user.email "build@knotel.com"
 git config --global user.name 'Action Bronson'
-
 #GITHUB_TOKEN has to be set in the actions secrets
 # make sure not to have the default GITHUB_TOKEN checked on the action.
 # this was a workaround to branch protections and having actions run
