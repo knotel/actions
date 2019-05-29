@@ -3,14 +3,10 @@
 alias git=hub
 
 set -x
+echo "${KNOTELBUILD_SSH_KEY}" > $HOME/.ssh/id_rsa
 
 git config --global user.email "build@knotel.com"
 git config --global user.name 'Action Bronson'
-#GITHUB_TOKEN has to be set in the actions secrets
-# make sure not to have the default GITHUB_TOKEN checked on the action.
-# this was a workaround to branch protections and having actions run
-GITHUB_TOKEN=$KNOTELBUILD_TOKEN
-#GITHUB_USER has to be set in the actions secrets as well
 
 if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
   echo "Not a merge commit... Pulling latest."
