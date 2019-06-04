@@ -1,6 +1,7 @@
 const request = require('./request')
 
 const { GITHUB_SHA, GITHUB_EVENT_PATH, GITHUB_TOKEN, GITHUB_WORKSPACE } = process.env
+console.log(process.env)
 const event = require(GITHUB_EVENT_PATH)
 const { repository } = event
 const {
