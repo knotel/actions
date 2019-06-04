@@ -26,7 +26,7 @@ commits.forEach(commit => {
     }
     for (let i = 0 , len = commit.removed.length; i < len; i++) {
       let path_segments = commit.removed[i].split('/')
-      const service_name = path_segments[0]
+      const service_name = path_segments[1]
       path_segments.shift()
       const service_file_path = path_segments.join('/')
       tmp_services.push(service_name);
