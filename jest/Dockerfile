@@ -1,10 +1,9 @@
-FROM rkusa/jest-action:latest as builder
+FROM rkusa/jest-action:1.0.0 as builder
 
-FROM node:10.15.1
+FROM node:10-alpine
 
-RUN apt-get update && \
-    apt-get install -y wget ca-certificates && \
-    rm -rf /var/lib/apt/lists/*
+#possibly remove this
+RUN apk update && apk add --no-cache --virtual ca-certificates
 
 COPY --from=builder /usr/bin/jest-action /usr/bin/jest-action
 
@@ -21,6 +20,7 @@ LABEL com.github.actions.icon="check"
 LABEL com.github.actions.color="black"
 
 ENV JEST_CMD ./node_modules/.bin/jest
+RUN chmod +x /usr/bin/jest-action
 COPY entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
