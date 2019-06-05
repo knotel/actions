@@ -4,6 +4,7 @@ FROM node:10-alpine
 
 #possibly remove this
 RUN apk update && apk add --no-cache --virtual ca-certificates
+RUN apk add bash
 
 COPY --from=builder /usr/bin/jest-action /usr/bin/jest-action
 
