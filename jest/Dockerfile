@@ -6,12 +6,9 @@ RUN apt-get update && \
     apt-get install -y wget ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /usr/bin/jest-action /usr/bin/jest-action 
+COPY --from=builder /usr/bin/jest-action /usr/bin/jest-action
 
-WORKDIR /bin
-RUN wget "http://stedolan.github.io/jq/download/linux64/jq" && chmod 755 jq
-
-WORKDIR ~/
+RUN wget "http://stedolan.github.io/jq/download/linux64/jq" -P /bin/ && chmod 755 /bin/jq
 
 LABEL version="1.0.0"
 LABEL repository="https://github.com/knotel/actions/jest"
@@ -26,6 +23,5 @@ LABEL com.github.actions.color="black"
 ENV JEST_CMD ./node_modules/.bin/jest
 COPY entrypoint.sh /entrypoint.sh
 
-WORKDIR ~/
 ENTRYPOINT ["/entrypoint.sh"]
 CMD [""]
