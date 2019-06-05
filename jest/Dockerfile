@@ -7,7 +7,7 @@ WORKDIR /build
 COPY . .
 RUN go build .
 
-FROM node:11
+FROM node:10.15.1
 
 RUN apt-get update && \
     apt-get install -y wget ca-certificates && \
