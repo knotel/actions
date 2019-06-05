@@ -4,11 +4,9 @@ FROM node:10-alpine
 
 #possibly remove this
 RUN apk update && apk add --no-cache --virtual ca-certificates
-RUN apk add bash
+RUN apk add bash jq
 
 COPY --from=builder /usr/bin/jest-action /usr/bin/jest-action
-
-RUN wget "http://stedolan.github.io/jq/download/linux64/jq" -P /bin/ && chmod 755 /bin/jq
 
 LABEL version="1.0.0"
 LABEL repository="https://github.com/knotel/actions/jest"
