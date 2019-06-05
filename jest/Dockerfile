@@ -1,6 +1,6 @@
 FROM rkusa/jest-action:1.0.0 as builder
 
-FROM node:10-alpine
+FROM node:10.15.1-alpine
 
 #possibly remove this
 RUN apk update && apk add --no-cache --virtual ca-certificates
