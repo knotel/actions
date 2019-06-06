@@ -5,6 +5,26 @@ FROM node:10.15.1-alpine
 #possibly remove this
 RUN apk update && apk add --no-cache --virtual ca-certificates
 RUN apk add bash jq
+RUN apk update && apk upgrade && \
+    echo @edge http://nl.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories && \
+    echo @edge http://nl.alpinelinux.org/alpine/edge/main >> /etc/apk/repositories && \
+    apk add --no-cache \
+      chromium@edge=~73.0.3683.103 \
+      nss@edge \
+      freetype@edge \
+      harfbuzz@edge \
+      ttf-freefont@edge
+
+# Tell Puppeteer to skip installing Chrome. We'll be using the installed package.
+ENV PUP# Puppeteer v1.12.2 works with Chromium 73.
+
+# Add user so we don't need --no-sandbox.
+RUN addgroup -S pptruser && adduser -S -g pptruser pptruser \
+    && mkdir -p /home/pptruser/Downloads /app \
+    && chown -R pptruser:pptruser /home/pptruser \
+
+# Run everything after as non-privileged user.
+USER pptruser   && chown -R pptruser:pptruser /appPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
 COPY --from=builder /usr/bin/jest-action /usr/bin/jest-action
 
