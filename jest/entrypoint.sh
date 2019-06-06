@@ -23,7 +23,12 @@ else
         echo "Error! /usr/bin/jest-action File does not exist!"
       else
         echo "Running Jest for Service: $service"
-        $JEST_CMD $* --ci --testLocationInResults --json --outputFile=report.json &> /dev/null
+        $JEST_CMD $* --ci --testLocationInResults --json --maxConcurrency=20 --onlyChanged --forceExit --debug --outputFile=/github/workspace/frontend/flex/report.json & JESTPID1=$!
+        wait $JESTPID1
+        echo "jest process id ${JESTPID1} finished running in ${service:1:${#service}-2}"
+        sleep 2
+        ls -al
+        stat report.json
         cat report.json | /usr/bin/jest-action
       fi
     fi
