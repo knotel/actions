@@ -75,8 +75,6 @@ function eslint() {
 }
 
 async function updateCheck(id, conclusion, output, pages) {
-  console.log('inside updateCheck: ', pages[0])
-
   for (const page of pages) {
 
     output.annotations = page
