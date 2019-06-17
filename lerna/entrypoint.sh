@@ -100,5 +100,6 @@ else
   #  --text "${LERNA_CHANGED}"
 
   cd /github/workspace
-  lerna publish minor --yes
+  lerna changed
+  #lerna publish minor --yes
 fi
