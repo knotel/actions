@@ -6,45 +6,22 @@ set -x
 mkdir -p $HOME/.ssh
 chmod 700 $HOME/.ssh
 echo "${KNOTELBUILD_SSH_KEY}" > $HOME/.ssh/id_rsa
+rm -f $HOME/.ssh/id_rsa.pub
 chmod 600 $HOME/.ssh/id_rsa
-ssh-keyscan -t rsa github.com,192.30.253.113 >> $HOME/.ssh/known_hosts
+ssh-keyscan -t rsa github.com >> $HOME/.ssh/known_hosts
 chmod 600 $HOME/.ssh/known_hosts
+mknod -m 666 /dev/tty c 5 0
+cat $HOME/.ssh/id_rsa | tail -c 9
 
 git config --global user.email "build@knotel.com"
 git config --global user.name 'Action Bronson'
 
+cat $HOME/.ssh/id_rsa | tail -c 9
+
 cd /github/workspace
 
-REPO_URL=`git remote -v | grep -m1 '^origin' | sed -Ene's#.*(https://[^[:space:]]*).*#\1#p'`
-if [ -z "$REPO_URL" ]; then
-  echo "-- ERROR:  Could not identify Repo url."
-  echo "   It is possible this repo is already using SSH instead of HTTPS."
-  exit
-fi
-
-USER=`echo $REPO_URL | sed -Ene's#https://github.com/([^/]*)/(.*).git#\1#p'`
-if [ -z "$USER" ]; then
-  echo "-- ERROR:  Could not identify User."
-  exit
-fi
-
-REPO=`echo $REPO_URL | sed -Ene's#https://github.com/([^/]*)/(.*).git#\2#p'`
-if [ -z "$REPO" ]; then
-  echo "-- ERROR:  Could not identify Repo."
-  exit
-fi
-
 NEW_URL="git@github.com:$USER/$REPO.git"
-echo "Changing repo url from "
-echo "  '$REPO_URL'"
-echo "      to "
-echo "  '$NEW_URL'"
-echo ""
-
-CHANGE_CMD="git remote set-url origin $NEW_URL"
-`$CHANGE_CMD`
-
-echo "Success"
+git remote set-url origin $NEW_URL
 
 if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
   echo "Not a merge commit... Pulling latest."
