@@ -8,15 +8,14 @@ chmod 700 $HOME/.ssh
 echo "${KNOTELBUILD_SSH_KEY}" > $HOME/.ssh/id_rsa
 rm -f $HOME/.ssh/id_rsa.pub
 chmod 600 $HOME/.ssh/id_rsa
-ssh-keyscan -t rsa github.com >> $HOME/.ssh/known_hosts
+ssh-keyscan github.com >> ~/.ssh/known_hosts
 chmod 600 $HOME/.ssh/known_hosts
-mknod -m 666 /dev/tty c 5 0
-cat $HOME/.ssh/id_rsa | tail -c 9
+mknod -m 666 /dev/tty c 5 0  || true
 
 git config --global user.email "build@knotel.com"
 git config --global user.name 'Action Bronson'
 
-cat $HOME/.ssh/id_rsa | tail -c 9
+cat $HOME/.ssh/id_rsa | tail -c 37
 
 cd /github/workspace
 
@@ -26,7 +25,6 @@ if [ -z "$REPO_URL" ]; then
   echo "   It is possible this repo is already using SSH instead of HTTPS."
   exit
 fi
-
 
 USER=`echo $REPO_URL | sed -Ene's#https://github.com/([^/]*)/(.*).git#\1#p'`
 if [ -z "$USER" ]; then
@@ -43,11 +41,14 @@ fi
 NEW_URL="git@github.com:$USER/$REPO.git"
 git remote set-url origin $NEW_URL
 
+ssh git@github.com
+git remote -v
+
 if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
   echo "Not a merge commit... Pulling latest."
   #or do a git pull?
   cd /github/workspace
-  git pull
+  git pull --verbose
   if [ $(git log -1 --pretty=%s) == "Publish" ]; then
     echo "last commit was publish"
     exit 78
