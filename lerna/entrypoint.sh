@@ -2,20 +2,22 @@
 
 alias git=hub
 
-mkdir -p $HOME/.ssh
-chmod 700 $HOME/.ssh
-echo "${KNOTELBUILD_SSH_KEY}" > $HOME/.ssh/id_rsa
-rm -f $HOME/.ssh/id_rsa.pub
-chmod 600 $HOME/.ssh/id_rsa
+echo "HOME is ${HOME}"
+
+mkdir -p /root/.ssh
+chmod 700 /root/.ssh
+echo "${KNOTELBUILD_SSH_KEY}" > /root/.ssh/id_rsa
+rm -f /root/.ssh/id_rsa.pub
+chmod 600 /root/.ssh/id_rsa
 ssh-keyscan github.com >> ~/.ssh/known_hosts
-chmod 600 $HOME/.ssh/known_hosts
+chmod 600 /root/.ssh/known_hosts
 mknod -m 666 /dev/tty c 5 0  || true
 
 git config --global user.email "build@knotel.com"
 git config --global user.name 'Action Bronson'
 
-cat $HOME/.ssh/id_rsa | tail -c 37
-cat $HOME/.ssh/id_rsa | wc -l
+cat /root/.ssh/id_rsa | tail -c 37
+cat /root/.ssh/id_rsa | wc -l
 
 cd /github/workspace
 
