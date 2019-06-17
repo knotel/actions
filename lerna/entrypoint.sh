@@ -6,7 +6,7 @@ echo "HOME is ${HOME}"
 
 
 
-fuction add_key() {
+function add_key() {
   mkdir -p ${THE_HOME}/.ssh
   chmod 700 ${THE_HOME}/.ssh
   echo "${KNOTELBUILD_SSH_KEY}" > ${THE_HOME}/.ssh/id_rsa
