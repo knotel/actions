@@ -1,5 +1,4 @@
 #!/bin/bash -l
-
 set -e
 
 # pwd here is /github/workspace
@@ -20,9 +19,15 @@ else
     else
       cd /github/workspace
       cd ${service:1:${#service}-2}
-      echo "Running eslint $* inside of ${service:1:${#service}-2}"
-      node /action/run.js
-      echo
+      if [ -f package.json ]; then
+        echo "Running eslint $* inside of ${service:1:${#service}-2}"
+        node /action/run.js
+        echo
+      else
+        echo "No package.json file"
+        echo "Not a lintable service. Exiting Netural."
+        exit 78
+      fi
     fi
   done
 fi
