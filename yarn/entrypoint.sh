@@ -28,10 +28,20 @@ else
       echo
     else
       cd /github/workspace
-      cd ${service:1:${#service}-2}
-      echo "Running yarn $* inside of ${service:1:${#service}-2}"
-      yarn $*
-      echo
+      if [[ -d ${service:1:${#service}-2} ]]; then
+        echo "${service:1:${#service}-2} is a directory"
+        echo "Moving to ${service:1:${#service}-2}"
+        cd ${service:1:${#service}-2}
+        echo "Running yarn $* inside of ${service:1:${#service}-2}"
+        yarn $*
+        echo
+      elif [[ -f ${service:1:${#service}-2} ]]; then
+        echo "${service:1:${#service}-2} is a file"
+        echo "Exiting loop!"
+      else
+        echo "${service:1:${#service}-2} is not valid"
+        exit 1
+      fi
     fi
   done
 fi
