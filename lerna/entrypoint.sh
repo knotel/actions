@@ -4,8 +4,11 @@ alias git=hub
 
 set -x
 mkdir -p $HOME/.ssh
+chmod 700 $HOME/.ssh
 echo "${KNOTELBUILD_SSH_KEY}" > $HOME/.ssh/id_rsa
-ssh-keyscan -t rsa github.com >> $HOME/.ssh/known_hosts
+chmod 600 $HOME/.ssh/id_rsa
+ssh-keyscan -t rsa github.com,192.30.253.113 >> $HOME/.ssh/known_hosts
+chmod 600 $HOME/.ssh/known_hosts
 
 git config --global user.email "build@knotel.com"
 git config --global user.name 'Action Bronson'
