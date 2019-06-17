@@ -20,6 +20,14 @@ cat $HOME/.ssh/id_rsa | tail -c 9
 
 cd /github/workspace
 
+REPO_URL=`git remote -v | grep -m1 '^origin' | sed -Ene's#.*(https://[^[:space:]]*).*#\1#p'`
+if [ -z "$REPO_URL" ]; then
+  echo "-- ERROR:  Could not identify Repo url."
+  echo "   It is possible this repo is already using SSH instead of HTTPS."
+  exit
+fi
+
+
 USER=`echo $REPO_URL | sed -Ene's#https://github.com/([^/]*)/(.*).git#\1#p'`
 if [ -z "$USER" ]; then
   echo "-- ERROR:  Could not identify User."
