@@ -53,14 +53,19 @@ NEW_URL="git@github.com:$USER/$REPO.git"
 git remote set-url origin $NEW_URL
 
 ssh git@github.com || true
-ssh git@github.com -vvv || true
+# ssh git@github.com -vvv || true
 git remote -v
 
 if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
   echo "Not a merge commit... Pulling latest."
   #or do a git pull?
   cd /github/workspace
-  git pull --verbose
+  git clean -f
+  git pull
+  git checkout master -f
+  git config --global push.default current
+  git clean -f
+  git pull
   if [ $(git log -1 --pretty=%s) == "Publish" ]; then
     echo "last commit was publish"
     exit 78
