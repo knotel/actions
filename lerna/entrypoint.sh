@@ -2,7 +2,6 @@
 
 alias git=hub
 
-set -x
 mkdir -p $HOME/.ssh
 chmod 700 $HOME/.ssh
 echo "${KNOTELBUILD_SSH_KEY}" > $HOME/.ssh/id_rsa
@@ -101,5 +100,6 @@ else
   #  --text "${LERNA_CHANGED}"
 
   cd /github/workspace
-  lerna publish minor --yes
+  lerna changed
+  #lerna publish minor --yes
 fi
