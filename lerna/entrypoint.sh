@@ -4,20 +4,29 @@ alias git=hub
 
 echo "HOME is ${HOME}"
 
-mkdir -p /root/.ssh
-chmod 700 /root/.ssh
-echo "${KNOTELBUILD_SSH_KEY}" > /root/.ssh/id_rsa
-rm -f /root/.ssh/id_rsa.pub
-chmod 600 /root/.ssh/id_rsa
-ssh-keyscan github.com >> ~/.ssh/known_hosts
-chmod 600 /root/.ssh/known_hosts
+
+
+fuction add_key() {
+  mkdir -p ${THE_HOME}/.ssh
+  chmod 700 ${THE_HOME}/.ssh
+  echo "${KNOTELBUILD_SSH_KEY}" > ${THE_HOME}/.ssh/id_rsa
+  rm -f ${THE_HOME}/.ssh/id_rsa.pub
+  chmod 600 ${THE_HOME}/.ssh/id_rsa
+  ssh-keyscan github.com >> ${THE_HOME}/.ssh/known_hosts
+  chmod 600 ${THE_HOME}/.ssh/known_hosts
+  cat ${THE_HOME}/.ssh/id_rsa | tail -c 37
+  cat ${THE_HOME}/.ssh/id_rsa | wc -l
+} 
+export THE_HOME=/root
+add_key
+export THE_HOME=/github/home
+add_key
+
+
 mknod -m 666 /dev/tty c 5 0  || true
 
 git config --global user.email "build@knotel.com"
 git config --global user.name 'Action Bronson'
-
-cat /root/.ssh/id_rsa | tail -c 37
-cat /root/.ssh/id_rsa | wc -l
 
 cd /github/workspace
 
