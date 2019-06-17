@@ -15,6 +15,7 @@ git config --global user.email "build@knotel.com"
 git config --global user.name 'Action Bronson'
 
 cat $HOME/.ssh/id_rsa | tail -c 37
+cat $HOME/.ssh/id_rsa | wc -l
 
 cd /github/workspace
 
@@ -40,7 +41,8 @@ fi
 NEW_URL="git@github.com:$USER/$REPO.git"
 git remote set-url origin $NEW_URL
 
-ssh git@github.com
+ssh git@github.com || true
+ssh git@github.com -vvv || true
 git remote -v
 
 if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
