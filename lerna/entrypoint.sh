@@ -2,7 +2,6 @@
 
 alias git=hub
 
-set -x
 mkdir -p $HOME/.ssh
 chmod 700 $HOME/.ssh
 echo "${KNOTELBUILD_SSH_KEY}" > $HOME/.ssh/id_rsa
