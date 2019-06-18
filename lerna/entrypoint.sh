@@ -51,10 +51,6 @@ fi
 NEW_URL="git@github.com:$USER/$REPO.git"
 git remote set-url origin $NEW_URL
 
-ssh git@github.com || true
-# ssh git@github.com -vvv || true
-git remote -v
-
 if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
   echo "Not a merge commit... Pulling latest."
   #or do a git pull?
