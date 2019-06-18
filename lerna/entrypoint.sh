@@ -4,8 +4,6 @@ alias git=hub
 
 echo "HOME is ${HOME}"
 
-
-
 function add_key() {
   mkdir -p ${THE_HOME}/.ssh
   chmod 700 ${THE_HOME}/.ssh
@@ -16,7 +14,8 @@ function add_key() {
   chmod 600 ${THE_HOME}/.ssh/known_hosts
   cat ${THE_HOME}/.ssh/id_rsa | tail -c 37
   cat ${THE_HOME}/.ssh/id_rsa | wc -l
-} 
+}
+
 export THE_HOME=/root
 add_key
 export THE_HOME=/github/home
@@ -66,58 +65,59 @@ if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
   git config --global push.default current
   git clean -f
   git pull
-  if [ $(git log -1 --pretty=%s) == "Publish" ]; then
+  echo "Pulled newest changes."
+  #check again after a pull for the newest commit
+  if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
+    echo "Still seeing the last commit as not a merge commit. Exiting. Please report this issue."
+    exit 1
+  else
+    LAST_COMMIT=$(git log -1 --pretty=%s)
+    if [ ${LAST_COMMIT} == "Publish" ]; then
+      echo "last commit was publish"
+      exit 78
+    else
+    #run the lerna publish workflow
+    echo "Getting output of what's changed from lerna."
+    lerna changed --json > ~/changed.json
+    echo "Saved output to workspace in ~/changed.json"
+    echo "Changed:"
+    cat ~/changed.json
+    LERNA_CHANGED="\`\`\`"
+    LERNA_CHANGED=$(cd /github/workspace && lerna changed -la)
+    LERNA_CHANGED+="\`\`\`"
+    PRETEXT="The following packages have had a minor version bump."
+    /bin/slack chat send \
+      --author 'Action Bronson' \
+      --channel $CHANNEL  \
+      --pretext "${PRETEXT}" \
+      --color "${COLOR}" \
+      --text "${LERNA_CHANGED}"
+    fi
+  fi
+  LAST_COMMIT=$(git log -1 --pretty=%s)
+  if [ ${LAST_COMMIT} == "Publish" ]; then
     echo "last commit was publish"
     exit 78
   fi
 else
   echo "Last commit is a merge. Starting Lerna workflow."
-  # $(git log -1 --pretty=%s) to get the title of the last commit.
-  # We want to check if the last one is `Publish`, as that's the title
-  # that Lerna gives the publish commit.
-
-  #slack chat send \
-  #  --actions ${actions} \
-  #  --author ${author} \
-  #  --author-icon ${author_icon} \
-  #  --author-link ${author-link} \
-  #  --channel ${channel} \
-  #  --color ${color} \ #  --fields ${fields} \
-  #  --footer ${footer} \
-  #  --footer-icon ${footer-icon} \
-  #  --image '${image}' \
-  #  --pretext '${pretext}' \
-  #  --text '${slack-text}' \
-  #  --time ${time} \
-  #  --title ${title} \
-  #  --title-link ${title-link}
-
-  # ${title-link}  = 'https://github.com/knotel/actions/lerna'
-  # ${fields}      = '{"title": "Environment", "value": "snapshot", "short": true}'
-  # ${channel}     = '#channel'
-  # ${author-link} = 'https://github.com/knotel/actions/lerna'
-  # ${fields}      = '{"title": "Environment", "value": "snapshot", "short": true}'
-  # ${author-link} = 'https://github.com/rockymadden/slack-cli'
-  # ${author-icon} = 'https://assets-cdn.github.com/images/modules/logos_page/Octocat.png'
-  # ${footer-icon} = 'https://assets-cdn.github.com/images/modules/logos_page/Octocat.png'
-  # ${actions}     = '{"type": "button", "style": "primary", "text": "See results", "url": "http://example.com"}'
-  # ${image}       = "https://assets-cdn.github.com/images/modules/logos_page/Octocat.png"
+  echo "Getting output of what's changed from lerna."
   lerna changed --json > ~/changed.json
+  echo "Saved output to workspace in ~/changed.json"
+  echo "Changed:"
   cat ~/changed.json
 
-  #cd /github/workspace
-  #LERNA_CHANGED="\`\`\`"
-  #LERNA_CHANGED=$(cd /github/workspace && lerna changed -la)
-  #LERNA_CHANGED+="\`\`\`"
-  #PRETEXT="The following packages have had a minor version bump."
-  #/bin/slack chat send \
-  #  --author 'Action Bronson' \
-  #  --channel $CHANNEL  \
-  #  --pretext "${PRETEXT}" \
-  #  --color "${COLOR}" \
-  #  --text "${LERNA_CHANGED}"
+  LERNA_CHANGED="\`\`\`"
+  LERNA_CHANGED=$(cd /github/workspace && lerna changed -la)
+  LERNA_CHANGED+="\`\`\`"
+  PRETEXT="The following packages have had a minor version bump."
+  /bin/slack chat send \
+    --author 'Action Bronson' \
+    --channel $CHANNEL  \
+    --pretext "${PRETEXT}" \
+    --color "${COLOR}" \
+    --text "${LERNA_CHANGED}"
 
   cd /github/workspace
-  lerna changed
   #lerna publish minor --yes
 fi
