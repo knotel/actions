@@ -88,6 +88,7 @@ if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
       --pretext "${PRETEXT}" \
       --color "${COLOR}" \
       --text "${LERNA_CHANGED}"
+    lerna publish minor --yes
     fi
   fi
   LAST_COMMIT=$(git log -1 --pretty=%s)
@@ -115,5 +116,5 @@ else
     --text "${LERNA_CHANGED}"
 
   cd /github/workspace
-  #lerna publish minor --yes
+  lerna publish minor --yes
 fi
