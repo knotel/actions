@@ -93,7 +93,7 @@ if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
       echo "Changed:"
       cat ~/changed.json
       LERNA_CHANGED="\`\`\`"
-      LERNA_CHANGED+=$(cd /github/workspace && lerna changed)
+      LERNA_CHANGED+=$(cd /github/workspace && lerna changed -la)
       LERNA_CHANGED+="\`\`\`"
       PRETEXT="The following packages have had a minor version bump."
       /bin/slack chat send \
@@ -102,7 +102,7 @@ if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
         --pretext "${PRETEXT}" \
         --color "${COLOR}" \
         --text "${LERNA_CHANGED}"
-      lerna publish minor --yes --canary --preid ci --npm-tag=ci
+      lerna publish minor --yes
     fi
   fi
   LAST_COMMIT=$(git log -1 --pretty=%s)
@@ -119,7 +119,7 @@ else
   cat ~/changed.json
 
   LERNA_CHANGED="\`\`\`"
-  LERNA_CHANGED+=$(cd /github/workspace && lerna changed)
+  LERNA_CHANGED+=$(cd /github/workspace && lerna changed -la)
   LERNA_CHANGED+="\`\`\`"
   PRETEXT="The following packages have had a minor version bump."
   /bin/slack chat send \
@@ -130,5 +130,5 @@ else
     --text "${LERNA_CHANGED}"
 
   cd /github/workspace
-  lerna publish minor --yes --canary --preid ci --npm-tag=ci
+  lerna publish minor --yes
 fi
