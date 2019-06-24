@@ -72,23 +72,23 @@ if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
       echo "last commit was publish"
       exit 78
     else
-    #run the lerna publish workflow
-    echo "Getting output of what's changed from lerna."
-    lerna changed --json > ~/changed.json
-    echo "Saved output to workspace in ~/changed.json"
-    echo "Changed:"
-    cat ~/changed.json
-    LERNA_CHANGED="\`\`\`"
-    LERNA_CHANGED=$(cd /github/workspace && lerna changed -la)
-    LERNA_CHANGED+="\`\`\`"
-    PRETEXT="The following packages have had a minor version bump."
-    /bin/slack chat send \
-      --author 'Action Bronson' \
-      --channel $CHANNEL  \
-      --pretext "${PRETEXT}" \
-      --color "${COLOR}" \
-      --text "${LERNA_CHANGED}"
-    lerna publish minor --yes
+      #run the lerna publish workflow
+      echo "Getting output of what's changed from lerna."
+      lerna changed --json > ~/changed.json
+      echo "Saved output to workspace in ~/changed.json"
+      echo "Changed:"
+      cat ~/changed.json
+      LERNA_CHANGED="\`\`\`"
+      LERNA_CHANGED=$(cd /github/workspace && lerna changed -la)
+      LERNA_CHANGED+="\`\`\`"
+      PRETEXT="The following packages have had a minor version bump."
+      /bin/slack chat send \
+        --author 'Action Bronson' \
+        --channel $CHANNEL  \
+        --pretext "${PRETEXT}" \
+        --color "${COLOR}" \
+        --text "${LERNA_CHANGED}"
+      lerna publish minor --yes --canary --preid ci --npm-tag=ci
     fi
   fi
   LAST_COMMIT=$(git log -1 --pretty=%s)
