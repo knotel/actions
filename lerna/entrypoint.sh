@@ -14,6 +14,10 @@ if [ -n "$NPM_TOKEN" ]; then
   chmod 0600 "$NPM_CONFIG_USERCONFIG"
 fi
 
+echo "Running npm whoami now:"
+npm whomai
+echo "Finished running npm whoami now:"
+
 function add_key() {
   mkdir -p ${THE_HOME}/.ssh
   chmod 700 ${THE_HOME}/.ssh
