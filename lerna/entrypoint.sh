@@ -70,11 +70,11 @@ if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
   #or do a git pull?
   cd /github/workspace
   git clean -f
-  git pull
+  git pull origin master
   git checkout master -f
   git config --global push.default current
   git clean -f
-  git pull
+  git pull origin master
   echo "Pulled newest changes."
   #check again after a pull for the newest commit
   if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
