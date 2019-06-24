@@ -79,7 +79,7 @@ if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
       echo "Changed:"
       cat ~/changed.json
       LERNA_CHANGED="\`\`\`"
-      LERNA_CHANGED=$(cd /github/workspace && lerna changed -la)
+      LERNA_CHANGED+=$(cd /github/workspace && lerna changed -la)
       LERNA_CHANGED+="\`\`\`"
       PRETEXT="The following packages have had a minor version bump."
       /bin/slack chat send \
