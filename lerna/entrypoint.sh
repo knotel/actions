@@ -116,5 +116,5 @@ else
     --text "${LERNA_CHANGED}"
 
   cd /github/workspace
-  lerna publish minor --yes
+  lerna publish minor --yes --canary --preid ci --npm-tag=ci
 fi
