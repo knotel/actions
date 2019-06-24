@@ -15,7 +15,7 @@ if [ -n "$NPM_TOKEN" ]; then
 fi
 
 echo "Running npm whoami now:"
-npm whomai
+npm whoami
 echo "Finished running npm whoami now:"
 
 function add_key() {
