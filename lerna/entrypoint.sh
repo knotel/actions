@@ -140,6 +140,16 @@ else
     --text "${LERNA_CHANGED}"
 
   cd /github/workspace
+  git clean -f
+  git pull origin master
+  git checkout master -f
+  git config --global push.default current
+  git clean -f
+  git pull origin master
+  echo "Pulled newest changes."
+  echo
+  echo "Current HEAD is at:"
+  git rev-parse HEAD
 
   #Generate a diff.patch file for the last version bump
   lerna diff > ~/diff.patch
