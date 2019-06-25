@@ -26,8 +26,6 @@ function add_key() {
   chmod 600 ${THE_HOME}/.ssh/id_rsa
   ssh-keyscan github.com >> ${THE_HOME}/.ssh/known_hosts
   chmod 600 ${THE_HOME}/.ssh/known_hosts
-  cat ${THE_HOME}/.ssh/id_rsa | tail -c 37
-  cat ${THE_HOME}/.ssh/id_rsa | wc -l
 }
 
 export THE_HOME=/root
@@ -76,6 +74,9 @@ if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
   git clean -f
   git pull origin master
   echo "Pulled newest changes."
+  echo
+  echo "Current HEAD is at:"
+  git rev-parse HEAD
   #check again after a pull for the newest commit
   if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
     echo "Still seeing the last commit as not a merge commit. Exiting. Please report this issue."
@@ -102,7 +103,16 @@ if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
         --pretext "${PRETEXT}" \
         --color "${COLOR}" \
         --text "${LERNA_CHANGED}"
-      lerna publish minor --yes
+
+      #Generate a diff.patch file for the last version bump
+      lerna diff > ~/diff.patch
+      DIFF_COMMENT="Here is a diff patch with all the changes since the last publish:"
+      /bin/slack file upload --file ~/diff.patch --filetype patch --channels '#deploys' --comment "${DIFF_COMMENT}" --title 'Patch Incoming!'
+
+      #Run the publish command and save the output into a logfile
+      lerna publish minor --yes > ~/publish.log
+      PUBLISH_COMMENT="Here is the logfile for the last publish:"
+      /bin/slack file upload --file ~/publish.log --filetype log --channels '#deploys' --comment "${PUBLISH_COMMENT}" --title 'Log Incoming!'
     fi
   fi
   LAST_COMMIT=$(git log -1 --pretty=%s)
@@ -130,5 +140,14 @@ else
     --text "${LERNA_CHANGED}"
 
   cd /github/workspace
-  lerna publish minor --yes
+
+  #Generate a diff.patch file for the last version bump
+  lerna diff > ~/diff.patch
+  DIFF_COMMENT="Here is a diff patch with all the changes since the last publish:"
+  /bin/slack file upload --file ~/diff.patch --filetype patch --channels '#deploys' --comment "${DIFF_COMMENT}" --title 'Patch Incoming!'
+
+  #Run the publish command and save the output into a logfile
+  lerna publish minor --yes > ~/publish.log
+  PUBLISH_COMMENT="Here is the logfile for the last publish:"
+  /bin/slack file upload --file ~/publish.log --filetype log --channels '#deploys' --comment "${PUBLISH_COMMENT}" --title 'Log Incoming!'
 fi
