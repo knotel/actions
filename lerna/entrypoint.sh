@@ -79,8 +79,14 @@ if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
   git rev-parse HEAD
   #check again after a pull for the newest commit
   if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
-    echo "Still seeing the last commit as not a merge commit. Exiting. Please report this issue."
-    exit 1
+    LAST_COMMIT=$(git log -1 --pretty=%s)
+    if [ ${LAST_COMMIT} == "Publish" ]; then
+      echo "last commit was publish"
+      exit 78
+    else
+      echo "Still seeing the last commit as not a merge commit. Exiting. Please report this issue."
+      exit 1
+    fi
   else
     LAST_COMMIT=$(git log -1 --pretty=%s)
     if [ ${LAST_COMMIT} == "Publish" ]; then
