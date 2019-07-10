@@ -1,4 +1,4 @@
-FROM node:lts
+FROM node:10.15.1
 
 ADD https://github.com/github/hub/releases/download/v2.11.2/hub-linux-amd64-2.11.2.tgz /bin
 
