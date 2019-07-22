@@ -21,7 +21,7 @@ if [ ! -f ~/services.json ]; then
   exit 1
 else
   cd /github/workspace
-  yarn
+  #yarn
   CHANGES=($(cat ~/services.json | jq -r '@sh'))
   for service in ${CHANGES[@]}; do
     #if the service starts with a dot, don't run snyk tests
