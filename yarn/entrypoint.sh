@@ -39,12 +39,11 @@ else
         #npm install @knotel/rebar
         echo "Running yarn $* inside of ${service:1:${#service}-2}"
         #\mv node_modules node_modules_2
+        echo "Current yarn cache dir is:"
+        yarn cache dir
         yarn config set cache-folder .yarn
+        echo "New yarn cache dir is:"
         yarn install
-        echo "about to run ls -al ./node_modules/.bin/"
-        ln -s ./.yarn ./node_modules || true
-        ln -s ~/.yarn ./node_modules || true
-        ls -al ./node_modules/.bin/ || true
       elif [[ -f ${service:1:${#service}-2} ]]; then
         echo "${service:1:${#service}-2} is a file"
         echo "Exiting loop!"
