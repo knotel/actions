@@ -35,7 +35,8 @@ else
         echo "Moving to ${service:1:${#service}-2}"
         cd ${service:1:${#service}-2}
         echo "Running yarn $* inside of ${service:1:${#service}-2}"
-        yarn $* & YARNPID1=$!
+        yarn $* &
+        YARNPID1=$!
         wait $YARNPID1
       elif [[ -f ${service:1:${#service}-2} ]]; then
         echo "${service:1:${#service}-2} is a file"
