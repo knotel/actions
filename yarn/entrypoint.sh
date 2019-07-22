@@ -34,18 +34,20 @@ else
         echo "${service:1:${#service}-2} is a directory"
         echo "Moving to ${service:1:${#service}-2}"
         cd ${service:1:${#service}-2}
-        echo "npm whoami and then rebar install testing:"
-        npm whoami
-        npm install @knotel/rebar
+        #echo "npm whoami and then rebar install testing:"
+        #npm whoami
+        #npm install @knotel/rebar
         echo "Running yarn $* inside of ${service:1:${#service}-2}"
         \mv node_modules node_modules_2
-        echo y | yarn --verbose $* &
-        YARNPID1=$!
-        wait $YARNPID1
+        echo y | yarn --verbose $*
+        echo "about to run ls -al ./node_modules/.bin/"
+        ls -al ./node_modules/.bin/
+        #YARNPID1=$!
+        #wait $YARNPID1
         echo "yarn finished running, let's run it again for confirm"
-        echo y | yarn --verbose $* &
-        YARNPID1=$!
-        wait $YARNPID1
+        echo y | yarn --verbose $*
+        #YARNPID1=$!
+        #wait $YARNPID1
       elif [[ -f ${service:1:${#service}-2} ]]; then
         echo "${service:1:${#service}-2} is a file"
         echo "Exiting loop!"
