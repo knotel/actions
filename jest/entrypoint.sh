@@ -27,10 +27,8 @@ else
         wait $JESTPID1
         echo "jest process id ${JESTPID1} finished running in ${service:1:${#service}-2}"
         sleep 2
-        ls -al
         cd /github/workspace/coverage/${PROJECT}
-        ls -al
-        #cat report.json | /usr/bin/jest-action
+        cat jest-results.json | /usr/bin/jest-action
       fi
     fi
   done
