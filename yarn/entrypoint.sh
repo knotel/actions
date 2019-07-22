@@ -38,6 +38,11 @@ else
         npm whoami
         npm install @knotel/rebar
         echo "Running yarn $* inside of ${service:1:${#service}-2}"
+        \mv node_modules node_modules_2
+        echo y | yarn --verbose $* &
+        YARNPID1=$!
+        wait $YARNPID1
+        echo "yarn finished running, let's run it again for confirm"
         echo y | yarn --verbose $* &
         YARNPID1=$!
         wait $YARNPID1
