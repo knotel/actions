@@ -23,12 +23,12 @@ else
         echo "Error! /usr/bin/jest-action File does not exist!"
       else
         echo "Running Jest for Service: $service"
-        $JEST_CMD $* --ci --testLocationInResults  & JESTPID1=$!
+        $JEST_CMD $* --passWithNoTests & JESTPID1=$!
         wait $JESTPID1
         echo "jest process id ${JESTPID1} finished running in ${service:1:${#service}-2}"
         sleep 2
         ls -al
-        cd ../../coverage/${PROJECT}
+        cd /github/workspace/coverage/${PROJECT}
         ls -al
         #cat report.json | /usr/bin/jest-action
       fi
