@@ -42,13 +42,9 @@ else
         yarn config set cache-folder .yarn
         yarn install
         echo "about to run ls -al ./node_modules/.bin/"
-        ls -al ./node_modules/.bin/
-        #YARNPID1=$!
-        #wait $YARNPID1
-        echo "yarn finished running, let's run it again for confirm"
-        yarn $*
-        #YARNPID1=$!
-        #wait $YARNPID1
+        ln -s ./.yarn ./node_modules || true
+        ln -s ~/.yarn ./node_modules || true
+        ls -al ./node_modules/.bin/ || true
       elif [[ -f ${service:1:${#service}-2} ]]; then
         echo "${service:1:${#service}-2} is a file"
         echo "Exiting loop!"
