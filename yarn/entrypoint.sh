@@ -34,8 +34,11 @@ else
         echo "${service:1:${#service}-2} is a directory"
         echo "Moving to ${service:1:${#service}-2}"
         cd ${service:1:${#service}-2}
+        echo "npm whoami and then rebar install testing:"
+        npm whoami
+        npm install @knotel/rebar
         echo "Running yarn $* inside of ${service:1:${#service}-2}"
-        yarn --verbose $* --force &
+        echo y | yarn --verbose $* &
         YARNPID1=$!
         wait $YARNPID1
       elif [[ -f ${service:1:${#service}-2} ]]; then
