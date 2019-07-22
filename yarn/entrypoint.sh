@@ -36,7 +36,7 @@ else
         cd ${service:1:${#service}-2}
         echo "Running yarn $* inside of ${service:1:${#service}-2}"
         yarn $*
-        echo
+        wait 15
       elif [[ -f ${service:1:${#service}-2} ]]; then
         echo "${service:1:${#service}-2} is a file"
         echo "Exiting loop!"
