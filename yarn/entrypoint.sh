@@ -37,13 +37,14 @@ else
         #echo "npm whoami and then rebar install testing:"
         #npm whoami
         #npm install @knotel/rebar
-        echo "Running yarn $* inside of ${service:1:${#service}-2}"
         #\mv node_modules node_modules_2
         echo "Current yarn cache dir is:"
         yarn cache dir
         yarn config set cache-folder .yarn
         echo "New yarn cache dir is:"
-        yarn install
+        yarn cache dir
+        echo "Running yarn $* inside of ${service:1:${#service}-2}"
+        yarn install --frozen-lockfile --force --no-lockfile --no-bin-links --verbose
       elif [[ -f ${service:1:${#service}-2} ]]; then
         echo "${service:1:${#service}-2} is a file"
         echo "Exiting loop!"
