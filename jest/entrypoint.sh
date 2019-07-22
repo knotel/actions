@@ -6,6 +6,8 @@ if [ ! -f ~/services.json ]; then
   echo "You will need to install dependencies before running this action."
   exit 1
 else
+  cd /github/workspace
+  yarn install --frozen-lockfile --force --no-lockfile --no-bin-links
   cat ~/services.json
   CHANGES=`cat ~/services.json | jq -r '@sh'`
   for service in ${CHANGES[@]}; do
