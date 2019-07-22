@@ -63,6 +63,7 @@ function eslint() {
   }
 
   const pages = chunk(annotations, 50)
+  console.log(pages)
 
   return {
       conclusion: errorCount > 0 ? 'failure' : 'success',
