@@ -20,6 +20,8 @@ if [ ! -f ~/services.json ]; then
   echo "Please install the changes action at https://github.com/Knotel/actions/changes"
   exit 1
 else
+  cd /github/workspace
+  yarn
   CHANGES=($(cat ~/services.json | jq -r '@sh'))
   for service in ${CHANGES[@]}; do
     #if the service starts with a dot, don't run snyk tests
