@@ -10,6 +10,7 @@ if [ ! -f ~/services.json ]; then
   echo "You will need to install dependencies before running this action."
   exit 1
 else
+  cat ~/services.json
   CHANGES=`cat ~/services.json | jq -r '@sh'`
   for service in ${CHANGES[@]}; do
     #if the service starts with a dot, don't run Jest tests
