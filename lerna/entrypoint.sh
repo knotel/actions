@@ -80,7 +80,7 @@ if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
   #check again after a pull for the newest commit
   if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
     LAST_COMMIT=$(git log -1 --pretty=%s)
-    if [ ${LAST_COMMIT} == "Publish" ]; then
+    if [ "${LAST_COMMIT}" == "Publish" ]; then
       echo "last commit was publish"
       exit 78
     else
@@ -89,7 +89,7 @@ if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
     fi
   else
     LAST_COMMIT=$(git log -1 --pretty=%s)
-    if [ ${LAST_COMMIT} == "Publish" ]; then
+    if [ "${LAST_COMMIT}" == "Publish" ]; then
       echo "last commit was publish"
       exit 78
     else
@@ -128,7 +128,7 @@ if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
     fi
   fi
   LAST_COMMIT=$(git log -1 --pretty=%s)
-  if [ ${LAST_COMMIT} == "Publish" ]; then
+  if [ "${LAST_COMMIT}" == "Publish" ]; then
     echo "last commit was publish"
     exit 78
   fi
