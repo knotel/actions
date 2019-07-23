@@ -41,4 +41,10 @@ else
       fi
     fi
   done
+  echo "CURRENT GITHUB_REF: "
+  echo ${GITHUB_REF}
+  echo
+  echo "CURRENT GITHUB_SHA: "
+  echo ${GITHUB_SHA}
+  echo
 fi
