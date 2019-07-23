@@ -39,7 +39,7 @@ else
         echo "New yarn cache dir is:"
         yarn cache dir
         echo "Running yarn $* inside of $(pwd)"
-        yarn install --frozen-lockfile --force --no-lockfile --no-bin-links
+        yarn install --frozen-lockfile --force --no-lockfile
       elif [[ -f ${service:1:${#service}-2} ]]; then
         echo "${service:1:${#service}-2} is a file"
         echo "Exiting loop!"
