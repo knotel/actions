@@ -26,6 +26,8 @@ else
       else
         if [ ! -f /github/workspace/${service:1:${#service}-2}/node_modules/.bin/jest ]; then
           echo "Error! /github/workspace/${service:1:${#service}-2}/node_modules/.bin/jest does not exist!"
+          ls -al /github/workspace/${service:1:${#service}-2}/node_modules
+          exit 1
         fi
         echo "Running Jest for Service: $service"
         $JEST_CMD $* --passWithNoTests --testLocationInResults --outputFile=report.json --json & JESTPID1=$!
