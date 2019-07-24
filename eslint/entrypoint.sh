@@ -18,9 +18,7 @@ else
       echo
     else
       cd /github/workspace
-      if [ -d "${service:1:${#service}-2}" ]; then
-        cd ${service:1:${#service}-2} || true
-      fi
+      cd ${service:1:${#service}-2} || continue
       if [ -f package.json ]; then
         echo "Running eslint $* inside of ${service:1:${#service}-2}"
         node /action/run.js
