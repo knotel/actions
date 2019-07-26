@@ -109,4 +109,8 @@ if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
       done
     fi
   fi
+  cd /github/workspace/environments
+  git add $1
+  git commit -m "updated $1 with new refs"
+  git push
 fi
