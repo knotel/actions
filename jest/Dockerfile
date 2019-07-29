@@ -25,6 +25,9 @@ RUN apk update && apk upgrade && \
       harfbuzz@edge \
       ttf-freefont@edge
 
+RUN wget "http://stedolan.github.io/jq/download/linux64/jq" && chmod 755 jq
+RUN wget "https://raw.githubusercontent.com/rockymadden/slack-cli/master/src/slack" && chmod +x slack
+
 # Tell Puppeteer to skip installing Chrome. We'll be using the installed package.
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
