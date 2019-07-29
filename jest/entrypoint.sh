@@ -47,6 +47,10 @@ else
   echo "CURRENT GITHUB_SHA: "
   echo ${GITHUB_SHA}
   echo
-  cd /github/workspace/coverage
-  ../tools/cicd/upload_coverage_report_auth.sh
+  if [[ -z "${AWS_DEFAULT_REGION}" ]]; then
+    exit 78
+  else
+    cd /github/workspace/coverage
+    ../tools/cicd/upload_coverage_report_auth.sh
+  fi
 fi
