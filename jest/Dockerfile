@@ -25,6 +25,8 @@ RUN apk update && apk upgrade && \
       harfbuzz@edge \
       ttf-freefont@edge
 
+
+WORKDIR /bin
 RUN wget "http://stedolan.github.io/jq/download/linux64/jq" && chmod 755 jq
 RUN wget "https://raw.githubusercontent.com/rockymadden/slack-cli/master/src/slack" && chmod +x slack
 
@@ -45,6 +47,7 @@ LABEL com.github.actions.description="Execute jest tests and test failure annota
 LABEL com.github.actions.icon="check"
 LABEL com.github.actions.color="black"
 
+WORKDIR /github/workspace
 ENV JEST_CMD ./node_modules/.bin/jest
 RUN chmod +x /usr/bin/jest-action
 COPY entrypoint.sh /entrypoint.sh
