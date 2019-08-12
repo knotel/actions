@@ -101,10 +101,10 @@ if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
       fi
       #run the lerna publish workflow
       echo "Getting output of what's changed from lerna."
-      lerna changed --json > ~/changed.json
-      echo "Saved output to workspace in ~/changed.json"
+      lerna changed --json > ${HOME}/changed.json
+      echo "Saved output to workspace in ${HOME}/changed.json"
       echo "Changed:"
-      cat ~/changed.json
+      cat ${HOME}/changed.json
       LERNA_CHANGED="\`\`\`"
       LERNA_CHANGED+=$(cd /github/workspace && lerna changed -la)
       LERNA_CHANGED+="\`\`\`"
@@ -117,14 +117,14 @@ if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
         --text "${LERNA_CHANGED}"
 
       #Generate a diff.patch file for the last version bump
-      lerna diff > ~/diff.patch
+      lerna diff > ${HOME}/diff.patch
       DIFF_COMMENT="Here is a diff patch with all the changes since the last publish:"
-      /bin/slack file upload --file ~/diff.patch --filetype patch --channels '#deploys' --comment "${DIFF_COMMENT}" --title 'Patch Incoming!'
+      /bin/slack file upload --file ${HOME}/diff.patch --filetype patch --channels '#deploys' --comment "${DIFF_COMMENT}" --title 'Patch Incoming!'
 
       #Run the publish command and save the output into a logfile
-      lerna publish minor --yes > ~/publish.log
+      lerna publish minor --yes > ${HOME}/publish.log
       PUBLISH_COMMENT="Here is the logfile for the last publish:"
-      /bin/slack file upload --file ~/publish.log --filetype log --channels '#deploys' --comment "${PUBLISH_COMMENT}" --title 'Log Incoming!'
+      /bin/slack file upload --file ${HOME}/publish.log --filetype log --channels '#deploys' --comment "${PUBLISH_COMMENT}" --title 'Log Incoming!'
     fi
   fi
   LAST_COMMIT=$(git log -1 --pretty=%s)
@@ -141,10 +141,10 @@ else
     echo "No package bumps detected!"
     exit 78
   fi
-  lerna changed --json > ~/changed.json
-  echo "Saved output to workspace in ~/changed.json"
+  lerna changed --json > ${HOME}/changed.json
+  echo "Saved output to workspace in ${HOME}/changed.json"
   echo "Changed:"
-  cat ~/changed.json
+  cat ${HOME}/changed.json
 
   LERNA_CHANGED="\`\`\`"
   LERNA_CHANGED+=$(cd /github/workspace && lerna changed -la)
@@ -170,12 +170,12 @@ else
   git rev-parse HEAD
 
   #Generate a diff.patch file for the last version bump
-  lerna diff > ~/diff.patch
+  lerna diff > ${HOME}/diff.patch
   DIFF_COMMENT="Here is a diff patch with all the changes since the last publish:"
-  /bin/slack file upload --file ~/diff.patch --filetype patch --channels '#deploys' --comment "${DIFF_COMMENT}" --title 'Patch Incoming!'
+  /bin/slack file upload --file ${HOME}/diff.patch --filetype patch --channels '#deploys' --comment "${DIFF_COMMENT}" --title 'Patch Incoming!'
 
   #Run the publish command and save the output into a logfile
-  lerna publish minor --yes > ~/publish.log
+  lerna publish minor --yes > ${HOME}/publish.log
   PUBLISH_COMMENT="Here is the logfile for the last publish:"
-  /bin/slack file upload --file ~/publish.log --filetype log --channels '#deploys' --comment "${PUBLISH_COMMENT}" --title 'Log Incoming!'
+  /bin/slack file upload --file ${HOME}/publish.log --filetype log --channels '#deploys' --comment "${PUBLISH_COMMENT}" --title 'Log Incoming!'
 fi
