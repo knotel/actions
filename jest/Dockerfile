@@ -16,15 +16,15 @@ RUN echo "**** install Python ****" && \
     if [ ! -e /usr/bin/pip ]; then ln -s pip3 /usr/bin/pip ; fi
 
 RUN apk update && apk upgrade && \
-    echo @edge http://nl.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories && \
-    echo @edge http://nl.alpinelinux.org/alpine/edge/main >> /etc/apk/repositories && \
+    echo @3.10 http://nl.alpinelinux.org/alpine/v3.10/community >> /etc/apk/repositories && \
+    echo @3.10 http://nl.alpinelinux.org/alpine/v3.10/main >> /etc/apk/repositories && \
     apk add --no-cache \
-      chromium@edge=~73.0.3683.103 \
-      nss@edge \
-      freetype@edge \
-      harfbuzz@edge \
-      ttf-freefont@edge
-
+    chromium@3.10=~73.0.3683.103 \
+    nss@3.10 \
+    freetype@3.10 \
+    freetype-dev@3.10 \
+    harfbuzz@3.10 \
+    ttf-freefont@3.10
 
 WORKDIR /bin
 RUN wget "http://stedolan.github.io/jq/download/linux64/jq" && chmod 755 jq
