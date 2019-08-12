@@ -30,7 +30,7 @@ function add_key() {
 
 export THE_GITHUB_WORKSPACE=/root
 add_key
-export THE_GITHUB_WORKSPACE=${HOME}
+export THE_GITHUB_WORKSPACE=${GITHUB_WORKSPACE}
 add_key
 
 
