@@ -82,7 +82,7 @@ if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
     LAST_COMMIT=$(git log -1 --pretty=%s)
     if [ "${LAST_COMMIT}" == "Publish" ]; then
       echo "last commit was publish"
-      exit 78
+      exit 0
     else
       echo "Still seeing the last commit as not a merge commit. Exiting. Please report this issue."
       exit 1
@@ -91,13 +91,13 @@ if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
     LAST_COMMIT=$(git log -1 --pretty=%s)
     if [ "${LAST_COMMIT}" == "Publish" ]; then
       echo "last commit was publish"
-      exit 78
+      exit 0
     else
       LERNA_CHANGED=`lerna changed exit 2>&1`
 
       if [[ ${LERNA_CHANGED} == *'No changed packages found'* ]]; then
         echo "No package bumps detected!"
-        exit 78
+        exit 0
       fi
       #run the lerna publish workflow
       echo "Getting output of what's changed from lerna."
@@ -130,7 +130,7 @@ if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
   LAST_COMMIT=$(git log -1 --pretty=%s)
   if [ "${LAST_COMMIT}" == "Publish" ]; then
     echo "last commit was publish"
-    exit 78
+    exit 0
   fi
 else
   echo "Last commit is a merge. Starting Lerna workflow."
@@ -139,7 +139,7 @@ else
 
   if [[ ${LERNA_CHANGED} == *'No changed packages found'* ]]; then
     echo "No package bumps detected!"
-    exit 78
+    exit 0
   fi
   lerna changed --json > ${GITHUB_WORKSPACE}/changed.json
   echo "Saved output to workspace in ${GITHUB_WORKSPACE}/changed.json"

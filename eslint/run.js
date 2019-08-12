@@ -122,7 +122,7 @@ async function run() {
     console.log(output.summary)
     await updateCheck(id, conclusion, output, pages)
     if (conclusion === 'failure') {
-      process.exit(78)
+      process.exit(1)
     }
   } catch (err) {
     await updateCheck(id, 'failure')

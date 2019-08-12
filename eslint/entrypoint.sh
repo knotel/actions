@@ -25,8 +25,8 @@ else
         echo
       else
         echo "No package.json file"
-        echo "Not a lintable service. Exiting Netural."
-        exit 78
+        echo "Not a lintable service. Exiting Netural (success)."
+        exit 0 
       fi
     fi
   done

@@ -48,7 +48,7 @@ else
   echo ${GITHUB_SHA}
   echo
   if [[ -z "${AWS_DEFAULT_REGION}" ]]; then
-    exit 78
+    exit 1
   else
     cd ${GITHUB_WORKSPACE}/coverage
     ../tools/cicd/upload_coverage_report_auth.sh
