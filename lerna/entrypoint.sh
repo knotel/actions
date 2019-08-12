@@ -28,7 +28,7 @@ function add_key() {
   chmod 600 ${THE_GITHUB_WORKSPACE}/.ssh/known_hosts
 }
 
-export THE_GITHUB_WORKSPACE=/root
+export THE_GITHUB_WORKSPACE=/${HOME}
 add_key
 export THE_GITHUB_WORKSPACE=${GITHUB_WORKSPACE}
 add_key
