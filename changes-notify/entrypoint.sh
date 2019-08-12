@@ -31,13 +31,13 @@
 # ${actions}     = '{"type": "button", "style": "primary", "text": "See results", "url": "http://example.com"}'
 # ${image}       = "https://assets-cdn.github.com/images/modules/logos_page/Octocat.png"
 
-if [ ! -f ~/services.json ]; then
+if [ ! -f ${HOME}/services.json ]; then
   echo "Services File does not exist."
   echo "Please install the changes action at https://github.com/Knotel/actions/changes"
   echo "You will need to install dependencies before running this action."
   exit 1
 else
-  CHANGES=($(cat ~/files.json | jq -r '.[]' ))
+  CHANGES=($(cat ${HOME}/files.json | jq -r '.[]' ))
   BRANCH=$(git rev-parse --abbrev-ref HEAD)
   COMMIT=$(git log -n 1 --pretty=format:%H)
   ORG=$(git config --get remote.origin.url | sed -e "s/.*github.com.\(.*\)\/\(.*\)/\1/")
