@@ -4,7 +4,7 @@ FROM mikefarah/yq
 WORKDIR /bin
 RUN apk add jq bash
 
-WORKDIR /github/workspace
+WORKDIR ${GITHUB_WORKSPACE}
 
 LABEL version="1.1.0"
 LABEL repository="https://github.com/Knotel/actions/environment"

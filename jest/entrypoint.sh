@@ -6,7 +6,7 @@ if [ ! -f ${GITHUB_WORKSPACE}/services.json ]; then
   echo "You will need to install dependencies before running this action."
   exit 1
 else
-  cd /github/workspace
+  cd ${GITHUB_WORKSPACE}
   yarn install --frozen-lockfile --force --no-lockfile --no-bin-links
   cat ${GITHUB_WORKSPACE}/services.json
   CHANGES=`cat ${GITHUB_WORKSPACE}/services.json | jq -r '@sh'`
@@ -19,14 +19,14 @@ else
       echo "Skipping Running Jest in $service. (Hidden Folder)"
       echo
     else
-      cd /github/workspace
+      cd ${GITHUB_WORKSPACE}
       cd ${service:1:${#service}-2}
       if [ ! -f /usr/bin/jest-action ]; then
         echo "Error! /usr/bin/jest-action File does not exist!"
       else
-        if [ ! -f /github/workspace/${service:1:${#service}-2}/node_modules/.bin/jest ]; then
-          echo "Error! /github/workspace/${service:1:${#service}-2}/node_modules/.bin/jest does not exist!"
-          ls -al /github/workspace/${service:1:${#service}-2}/node_modules
+        if [ ! -f ${GITHUB_WORKSPACE}/${service:1:${#service}-2}/node_modules/.bin/jest ]; then
+          echo "Error! ${GITHUB_WORKSPACE}/${service:1:${#service}-2}/node_modules/.bin/jest does not exist!"
+          ls -al ${GITHUB_WORKSPACE}/${service:1:${#service}-2}/node_modules
           exit 1
         fi
         echo "Running Jest for Service: $service"
@@ -35,7 +35,7 @@ else
         echo "jest process id ${JESTPID1} finished running in ${service:1:${#service}-2}"
         sleep 2
         cat report.json | /usr/bin/jest-action
-        cd /github/workspace/coverage/${PROJECT}
+        cd ${GITHUB_WORKSPACE}/coverage/${PROJECT}
         echo "Contents of /coverage/${PROJECT}:"
         ls -al
       fi
@@ -50,7 +50,7 @@ else
   if [[ -z "${AWS_DEFAULT_REGION}" ]]; then
     exit 78
   else
-    cd /github/workspace/coverage
+    cd ${GITHUB_WORKSPACE}/coverage
     ../tools/cicd/upload_coverage_report_auth.sh
   fi
 fi

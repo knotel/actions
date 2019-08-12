@@ -30,7 +30,7 @@ function add_key() {
 
 export THE_GITHUB_WORKSPACE=/root
 add_key
-export THE_GITHUB_WORKSPACE=/github/home
+export THE_GITHUB_WORKSPACE=${HOME}
 add_key
 
 
@@ -39,7 +39,7 @@ mknod -m 666 /dev/tty c 5 0  || true
 git config --global user.email "build@knotel.com"
 git config --global user.name 'Action Bronson'
 
-cd /github/workspace
+cd ${GITHUB_WORKSPACE}
 
 REPO_URL=`git remote -v | grep -m1 '^origin' | sed -Ene's#.*(https://[^[:space:]]*).*#\1#p'`
 if [ -z "$REPO_URL" ]; then
@@ -66,7 +66,7 @@ git remote set-url origin $NEW_URL
 if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
   echo "Not a merge commit... Pulling latest."
   #or do a git pull?
-  cd /github/workspace
+  cd ${GITHUB_WORKSPACE}
   git clean -f
   git pull origin master
   git checkout master -f
@@ -106,7 +106,7 @@ if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
       echo "Changed:"
       cat ${GITHUB_WORKSPACE}/changed.json
       LERNA_CHANGED="\`\`\`"
-      LERNA_CHANGED+=$(cd /github/workspace && lerna changed -la)
+      LERNA_CHANGED+=$(cd ${GITHUB_WORKSPACE} && lerna changed -la)
       LERNA_CHANGED+="\`\`\`"
       PRETEXT="The following packages have had a minor version bump."
       /bin/slack chat send \
@@ -147,7 +147,7 @@ else
   cat ${GITHUB_WORKSPACE}/changed.json
 
   LERNA_CHANGED="\`\`\`"
-  LERNA_CHANGED+=$(cd /github/workspace && lerna changed -la)
+  LERNA_CHANGED+=$(cd ${GITHUB_WORKSPACE} && lerna changed -la)
   LERNA_CHANGED+="\`\`\`"
   PRETEXT="The following packages have had a minor version bump."
   /bin/slack chat send \
@@ -157,7 +157,7 @@ else
     --color "${COLOR}" \
     --text "${LERNA_CHANGED}"
 
-  cd /github/workspace
+  cd ${GITHUB_WORKSPACE}
   git clean -f
   git pull origin master
   git checkout master -f

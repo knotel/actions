@@ -47,7 +47,7 @@ LABEL com.github.actions.description="Execute jest tests and test failure annota
 LABEL com.github.actions.icon="check"
 LABEL com.github.actions.color="black"
 
-WORKDIR /github/workspace
+WORKDIR ${GITHUB_WORKSPACE}
 ENV JEST_CMD ./node_modules/.bin/jest
 RUN chmod +x /usr/bin/jest-action
 COPY entrypoint.sh /entrypoint.sh
