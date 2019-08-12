@@ -2,11 +2,11 @@
 
 alias git=hub
 
-echo "HOME is ${HOME}"
+echo "GITHUB_WORKSPACE is ${GITHUB_WORKSPACE}"
 
 if [ -n "$NPM_TOKEN" ]; then
-  # Respect NPM_CONFIG_USERCONFIG if it is provided, default to $HOME/.npmrc
-  NPM_CONFIG_USERCONFIG="${NPM_CONFIG_USERCONFIG-"$HOME/.npmrc"}"
+  # Respect NPM_CONFIG_USERCONFIG if it is provided, default to $GITHUB_WORKSPACE/.npmrc
+  NPM_CONFIG_USERCONFIG="${NPM_CONFIG_USERCONFIG-"$GITHUB_WORKSPACE/.npmrc"}"
   NPM_REGISTRY_URL="${NPM_REGISTRY_URL-registry.npmjs.org}"
 
   # Allow registry.npmjs.org to be overridden with an environment variable
@@ -19,18 +19,18 @@ npm whoami
 echo "Finished running npm whoami now:"
 
 function add_key() {
-  mkdir -p ${THE_HOME}/.ssh
-  chmod 700 ${THE_HOME}/.ssh
-  echo "${KNOTELBUILD_SSH_KEY}" > ${THE_HOME}/.ssh/id_rsa
-  rm -f ${THE_HOME}/.ssh/id_rsa.pub
-  chmod 600 ${THE_HOME}/.ssh/id_rsa
-  ssh-keyscan github.com >> ${THE_HOME}/.ssh/known_hosts
-  chmod 600 ${THE_HOME}/.ssh/known_hosts
+  mkdir -p ${THE_GITHUB_WORKSPACE}/.ssh
+  chmod 700 ${THE_GITHUB_WORKSPACE}/.ssh
+  echo "${KNOTELBUILD_SSH_KEY}" > ${THE_GITHUB_WORKSPACE}/.ssh/id_rsa
+  rm -f ${THE_GITHUB_WORKSPACE}/.ssh/id_rsa.pub
+  chmod 600 ${THE_GITHUB_WORKSPACE}/.ssh/id_rsa
+  ssh-keyscan github.com >> ${THE_GITHUB_WORKSPACE}/.ssh/known_hosts
+  chmod 600 ${THE_GITHUB_WORKSPACE}/.ssh/known_hosts
 }
 
-export THE_HOME=/root
+export THE_GITHUB_WORKSPACE=/root
 add_key
-export THE_HOME=/github/home
+export THE_GITHUB_WORKSPACE=/github/home
 add_key
 
 
@@ -101,10 +101,10 @@ if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
       fi
       #run the lerna publish workflow
       echo "Getting output of what's changed from lerna."
-      lerna changed --json > ${HOME}/changed.json
-      echo "Saved output to workspace in ${HOME}/changed.json"
+      lerna changed --json > ${GITHUB_WORKSPACE}/changed.json
+      echo "Saved output to workspace in ${GITHUB_WORKSPACE}/changed.json"
       echo "Changed:"
-      cat ${HOME}/changed.json
+      cat ${GITHUB_WORKSPACE}/changed.json
       LERNA_CHANGED="\`\`\`"
       LERNA_CHANGED+=$(cd /github/workspace && lerna changed -la)
       LERNA_CHANGED+="\`\`\`"
@@ -117,14 +117,14 @@ if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
         --text "${LERNA_CHANGED}"
 
       #Generate a diff.patch file for the last version bump
-      lerna diff > ${HOME}/diff.patch
+      lerna diff > ${GITHUB_WORKSPACE}/diff.patch
       DIFF_COMMENT="Here is a diff patch with all the changes since the last publish:"
-      /bin/slack file upload --file ${HOME}/diff.patch --filetype patch --channels '#deploys' --comment "${DIFF_COMMENT}" --title 'Patch Incoming!'
+      /bin/slack file upload --file ${GITHUB_WORKSPACE}/diff.patch --filetype patch --channels '#deploys' --comment "${DIFF_COMMENT}" --title 'Patch Incoming!'
 
       #Run the publish command and save the output into a logfile
-      lerna publish minor --yes > ${HOME}/publish.log
+      lerna publish minor --yes > ${GITHUB_WORKSPACE}/publish.log
       PUBLISH_COMMENT="Here is the logfile for the last publish:"
-      /bin/slack file upload --file ${HOME}/publish.log --filetype log --channels '#deploys' --comment "${PUBLISH_COMMENT}" --title 'Log Incoming!'
+      /bin/slack file upload --file ${GITHUB_WORKSPACE}/publish.log --filetype log --channels '#deploys' --comment "${PUBLISH_COMMENT}" --title 'Log Incoming!'
     fi
   fi
   LAST_COMMIT=$(git log -1 --pretty=%s)
@@ -141,10 +141,10 @@ else
     echo "No package bumps detected!"
     exit 78
   fi
-  lerna changed --json > ${HOME}/changed.json
-  echo "Saved output to workspace in ${HOME}/changed.json"
+  lerna changed --json > ${GITHUB_WORKSPACE}/changed.json
+  echo "Saved output to workspace in ${GITHUB_WORKSPACE}/changed.json"
   echo "Changed:"
-  cat ${HOME}/changed.json
+  cat ${GITHUB_WORKSPACE}/changed.json
 
   LERNA_CHANGED="\`\`\`"
   LERNA_CHANGED+=$(cd /github/workspace && lerna changed -la)
@@ -170,12 +170,12 @@ else
   git rev-parse HEAD
 
   #Generate a diff.patch file for the last version bump
-  lerna diff > ${HOME}/diff.patch
+  lerna diff > ${GITHUB_WORKSPACE}/diff.patch
   DIFF_COMMENT="Here is a diff patch with all the changes since the last publish:"
-  /bin/slack file upload --file ${HOME}/diff.patch --filetype patch --channels '#deploys' --comment "${DIFF_COMMENT}" --title 'Patch Incoming!'
+  /bin/slack file upload --file ${GITHUB_WORKSPACE}/diff.patch --filetype patch --channels '#deploys' --comment "${DIFF_COMMENT}" --title 'Patch Incoming!'
 
   #Run the publish command and save the output into a logfile
-  lerna publish minor --yes > ${HOME}/publish.log
+  lerna publish minor --yes > ${GITHUB_WORKSPACE}/publish.log
   PUBLISH_COMMENT="Here is the logfile for the last publish:"
-  /bin/slack file upload --file ${HOME}/publish.log --filetype log --channels '#deploys' --comment "${PUBLISH_COMMENT}" --title 'Log Incoming!'
+  /bin/slack file upload --file ${GITHUB_WORKSPACE}/publish.log --filetype log --channels '#deploys' --comment "${PUBLISH_COMMENT}" --title 'Log Incoming!'
 fi

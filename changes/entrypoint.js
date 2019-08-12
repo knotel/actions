@@ -51,16 +51,16 @@ commits.forEach(commit => {
 
 const SERVICES = tmp_services.filter((v, i, a) => a.indexOf(v) === i); 
 
-fs.writeFileSync(`${process.env.HOME}/services.json`, JSON.stringify(SERVICES), 'utf-8');
-fs.writeFileSync(`${process.env.HOME}/files.json`, JSON.stringify(FILES), 'utf-8');
-fs.writeFileSync(`${process.env.HOME}/files_modified.json`, JSON.stringify(FILES_MODIFIED), 'utf-8');
-fs.writeFileSync(`${process.env.HOME}/files_added.json`, JSON.stringify(FILES_ADDED), 'utf-8');
-fs.writeFileSync(`${process.env.HOME}/files_deleted.json`, JSON.stringify(FILES_DELETED), 'utf-8');
+fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/services.json`, JSON.stringify(SERVICES), 'utf-8');
+fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/files.json`, JSON.stringify(FILES), 'utf-8');
+fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/files_modified.json`, JSON.stringify(FILES_MODIFIED), 'utf-8');
+fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/files_added.json`, JSON.stringify(FILES_ADDED), 'utf-8');
+fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/files_deleted.json`, JSON.stringify(FILES_DELETED), 'utf-8');
 
-console.log(fs.readFileSync(`${process.env.HOME}/services.json`, {encoding: 'utf-8'}))
-console.log(fs.readFileSync(`${process.env.HOME}/files.json`, {encoding: 'utf-8'}))
-console.log(fs.readFileSync(`${process.env.HOME}/files_modified.json`, {encoding: 'utf-8'}))
-console.log(fs.readFileSync(`${process.env.HOME}/files_added.json`, {encoding: 'utf-8'}))
-console.log(fs.readFileSync(`${process.env.HOME}/files_deleted.json`, {encoding: 'utf-8'}))
+console.log(fs.readFileSync(`${process.env.GITHUB_WORKSPACE}/services.json`, {encoding: 'utf-8'}))
+console.log(fs.readFileSync(`${process.env.GITHUB_WORKSPACE}/files.json`, {encoding: 'utf-8'}))
+console.log(fs.readFileSync(`${process.env.GITHUB_WORKSPACE}/files_modified.json`, {encoding: 'utf-8'}))
+console.log(fs.readFileSync(`${process.env.GITHUB_WORKSPACE}/files_added.json`, {encoding: 'utf-8'}))
+console.log(fs.readFileSync(`${process.env.GITHUB_WORKSPACE}/files_deleted.json`, {encoding: 'utf-8'}))
 
 process.exit(0);
