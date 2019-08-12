@@ -5,7 +5,7 @@ WORKDIR /bin
 RUN wget "http://stedolan.github.io/jq/download/linux64/jq" && chmod 755 jq
 RUN wget "https://raw.githubusercontent.com/rockymadden/slack-cli/master/src/slack" && chmod +x slack
 
-WORKDIR ${GITHUB_WORKSPACE}
+WORKDIR /github/workspace
 
 LABEL maintainer="Knotel, @HoughIO"
 LABEL repository=https://github.com/knotel/actions/notify-changes

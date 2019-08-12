@@ -14,7 +14,7 @@ RUN wget "http://stedolan.github.io/jq/download/linux64/jq" && chmod 755 jq
 RUN wget "https://raw.githubusercontent.com/rockymadden/slack-cli/master/src/slack" && chmod +x slack
 
 RUN npm i -g lerna@${LERNA_VERSION}
-WORKDIR ${GITHUB_WORKSPACE}
+WORKDIR /github/workspace
 
 LABEL com.github.actions.name="lerna-action"
 LABEL com.github.actions.description="github action to run lerna commands, post messages to slack, etc"
