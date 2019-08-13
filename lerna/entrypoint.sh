@@ -51,19 +51,19 @@ if [ -z "$REPO_URL" ]; then
   echo "I was setting REPO_URL to:"
   echo $(git remote -v | grep -m1 '^origin' | sed -Ene's#.*(https://[^[:space:]]*).*#\1#p')
   echo ""
-  exit
+  exit 1
 fi
 
 USER=`echo $REPO_URL | sed -Ene's#https://github.com/([^/]*)/(.*).git#\1#p'`
 if [ -z "$USER" ]; then
   echo "-- ERROR:  Could not identify User."
-  exit
+  exit 1
 fi
 
 REPO=`echo $REPO_URL | sed -Ene's#https://github.com/([^/]*)/(.*).git#\2#p'`
 if [ -z "$REPO" ]; then
   echo "-- ERROR:  Could not identify Repo."
-  exit
+  exit 1
 fi
 
 NEW_URL="git@github.com:$USER/$REPO.git"
