@@ -2,9 +2,6 @@
 
 alias git=hub
 
-echo "running \"git checkout ${GITHUB_REF:11}\""
-git checkout "${GITHUB_REF:11}"
-
 echo "GITHUB_WORKSPACE is ${GITHUB_WORKSPACE}"
 
 if [ -n "$NPM_TOKEN" ]; then
@@ -43,6 +40,9 @@ git config --global user.email "build@knotel.com"
 git config --global user.name 'Action Bronson'
 
 cd ${GITHUB_WORKSPACE}
+
+echo "running \"git checkout ${GITHUB_REF:11}\""
+git checkout "${GITHUB_REF:11}"
 
 REPO_URL=`git remote -v | grep -m1 '^origin' | sed -Ene's#.*(https://[^[:space:]]*).*#\1#p'`
 if [ -z "$REPO_URL" ]; then
