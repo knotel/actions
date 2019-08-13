@@ -2,6 +2,9 @@
 
 alias git=hub
 
+echo "running \"git checkout ${GITHUB_REF:11}\""
+git checkout "${GITHUB_REF:11}"
+
 echo "GITHUB_WORKSPACE is ${GITHUB_WORKSPACE}"
 
 if [ -n "$NPM_TOKEN" ]; then
