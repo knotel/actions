@@ -30,6 +30,7 @@ function add_key() {
   chmod 700 ${THE_GITHUB_WORKSPACE}/.ssh
   echo "${KNOTELBUILD_SSH_KEY}" > ${THE_GITHUB_WORKSPACE}/.ssh/id_rsa
   rm -f ${THE_GITHUB_WORKSPACE}/.ssh/id_rsa.pub
+  rm -f ${THE_GITHUB_WORKSPACE}/.ssh/known_hosts
   chmod 600 ${THE_GITHUB_WORKSPACE}/.ssh/id_rsa
   ssh-keyscan github.com >> ${THE_GITHUB_WORKSPACE}/.ssh/known_hosts
   chmod 600 ${THE_GITHUB_WORKSPACE}/.ssh/known_hosts
