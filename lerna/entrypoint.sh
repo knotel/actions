@@ -8,6 +8,7 @@ set -e
 #REPO: ${{ secrets.REPO }}
 
 alias git=hub
+alias ssh='ssh -o "StrictHostKeyChecking=no"'
 
 echo "GITHUB_WORKSPACE is ${GITHUB_WORKSPACE}"
 
