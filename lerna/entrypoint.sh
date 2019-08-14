@@ -7,9 +7,8 @@ set -e
 #USER: ${{ secrets.USER }}
 #REPO: ${{ secrets.REPO }}
 
-alias git=hub
-alias ssh='ssh -o "StrictHostKeyChecking=no" -o UserKnownHostsFile=/dev/null'
-export GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
+#alias git=hub
+#alias ssh='ssh -o "StrictHostKeyChecking=no" -o UserKnownHostsFile=/dev/null'
 
 echo "GITHUB_WORKSPACE is ${GITHUB_WORKSPACE}"
 
@@ -38,13 +37,13 @@ function add_key() {
   chmod 600 ${THE_GITHUB_WORKSPACE}/.ssh/known_hosts
 }
 
-echo "${THE_GITHUB_WORKSPACE}/.ssh/id_rsa amount of lines in file is: $(cat ${THE_GITHUB_WORKSPACE}/.ssh/id_rsa | wc -l)"
-export GIT_SSH_COMMAND="ssh -i ${THE_GITHUB_WORKSPACE}/.ssh/id_rsa"
-
 export THE_GITHUB_WORKSPACE=/${HOME}
 add_key
 export THE_GITHUB_WORKSPACE=${GITHUB_WORKSPACE}
 add_key
+
+echo "${THE_GITHUB_WORKSPACE}/.ssh/id_rsa amount of lines in file is: $(cat ${THE_GITHUB_WORKSPACE}/.ssh/id_rsa | wc -l)"
+export GIT_SSH_COMMAND="ssh -i ${THE_GITHUB_WORKSPACE}/.ssh/id_rsa -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
 
 
 mknod -m 666 /dev/tty c 5 0  || true
