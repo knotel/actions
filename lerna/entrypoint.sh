@@ -12,13 +12,15 @@ set -e
 
 echo "GITHUB_WORKSPACE is ${GITHUB_WORKSPACE}"
 
-if [ -n "$NPM_TOKEN" ]; then
+if [[ -n "$NPM_TOKEN" ]]; then
   # Respect NPM_CONFIG_USERCONFIG if it is provided, default to $GITHUB_WORKSPACE/.npmrc
   NPM_CONFIG_USERCONFIG="${NPM_CONFIG_USERCONFIG-"$GITHUB_WORKSPACE/.npmrc"}"
   NPM_REGISTRY_URL="${NPM_REGISTRY_URL-registry.npmjs.org}"
 
   # Allow registry.npmjs.org to be overridden with an environment variable
   printf "//%s/:_authToken=%s" "$NPM_REGISTRY_URL" "$NPM_TOKEN" > "$NPM_CONFIG_USERCONFIG"
+  chmod 0600 "$NPM_CONFIG_USERCONFIG"
+  printf "//%s/:_authToken=%s" "$NPM_REGISTRY_URL" "$NPM_TOKEN" > "${HOME}/.npmrc"
   chmod 0600 "$NPM_CONFIG_USERCONFIG"
 fi
 
@@ -149,7 +151,7 @@ if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
       /bin/slack file upload --file ${GITHUB_WORKSPACE}/diff.patch --filetype patch --channels '#deploys' --comment "${DIFF_COMMENT}" --title 'Patch Incoming!'
 
       #Run the publish command and save the output into a logfile
-      lerna publish minor --yes > ${GITHUB_WORKSPACE}/publish.log
+      lerna publish --no-verify-access minor --yes > ${GITHUB_WORKSPACE}/publish.log
       PUBLISH_COMMENT="Here is the logfile for the last publish:"
       /bin/slack file upload --file ${GITHUB_WORKSPACE}/publish.log --filetype log --channels '#deploys' --comment "${PUBLISH_COMMENT}" --title 'Log Incoming!'
     fi
@@ -202,7 +204,7 @@ else
   /bin/slack file upload --file ${GITHUB_WORKSPACE}/diff.patch --filetype patch --channels '#deploys' --comment "${DIFF_COMMENT}" --title 'Patch Incoming!'
 
   #Run the publish command and save the output into a logfile
-  lerna publish minor --yes > ${GITHUB_WORKSPACE}/publish.log
+  lerna publish --no-verify-access minor --yes > ${GITHUB_WORKSPACE}/publish.log
   PUBLISH_COMMENT="Here is the logfile for the last publish:"
   /bin/slack file upload --file ${GITHUB_WORKSPACE}/publish.log --filetype log --channels '#deploys' --comment "${PUBLISH_COMMENT}" --title 'Log Incoming!'
 fi
