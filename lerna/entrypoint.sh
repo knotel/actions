@@ -38,6 +38,9 @@ function add_key() {
   chmod 600 ${THE_GITHUB_WORKSPACE}/.ssh/known_hosts
 }
 
+echo "${THE_GITHUB_WORKSPACE}/.ssh/id_rsa amount of lines in file is: $(cat ${THE_GITHUB_WORKSPACE}/.ssh/id_rsa | wc -l)"
+export GIT_SSH_COMMAND="ssh -i ${THE_GITHUB_WORKSPACE}/.ssh/id_rsa"
+
 export THE_GITHUB_WORKSPACE=/${HOME}
 add_key
 export THE_GITHUB_WORKSPACE=${GITHUB_WORKSPACE}
