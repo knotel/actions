@@ -1,5 +1,12 @@
 #!/bin/bash -l
 
+set -e
+
+#This script might require you to set the following secrets in your repo:
+#REPO_URL: ${{ secrets.REPO_URL }}
+#USER: ${{ secrets.USER }}
+#REPO: ${{ secrets.REPO }}
+
 alias git=hub
 
 echo "GITHUB_WORKSPACE is ${GITHUB_WORKSPACE}"
@@ -44,7 +51,10 @@ cd ${GITHUB_WORKSPACE}
 echo "running \"git checkout ${GITHUB_REF:11}\""
 git checkout "${GITHUB_REF:11}"
 
-REPO_URL=`git remote -v | grep -m1 '^origin' | sed -Ene's#.*(https://[^[:space:]]*).*#\1#p'`
+#Check to see if this is availible in the secrets, if not, build it below.
+if [ -z "$REPO_URL" ]; then
+  REPO_URL=`git remote -v | grep -m1 '^origin' | sed -Ene's#.*(https://[^[:space:]]*).*#\1#p'`
+fi
 if [ -z "$REPO_URL" ]; then
   echo "-- ERROR:  Could not identify Repo url."
   echo "   It is possible this repo is already using SSH instead of HTTPS."
@@ -54,13 +64,19 @@ if [ -z "$REPO_URL" ]; then
   exit 1
 fi
 
-USER=`echo $REPO_URL | sed -Ene's#https://github.com/([^/]*)/(.*).git#\1#p'`
+#Check to see if this is availible in the secrets, if not, build it below.
+if [ -z "$USER" ]; then
+  USER=`echo $REPO_URL | sed -Ene's#https://github.com/([^/]*)/(.*).git#\1#p'`
+fi
 if [ -z "$USER" ]; then
   echo "-- ERROR:  Could not identify User."
   exit 1
 fi
 
-REPO=`echo $REPO_URL | sed -Ene's#https://github.com/([^/]*)/(.*).git#\2#p'`
+#Check to see if this is availible in the secrets, if not, build it below.
+if [ -z "$REPO" ]; then
+  REPO=`echo $REPO_URL | sed -Ene's#https://github.com/([^/]*)/(.*).git#\2#p'`
+fi
 if [ -z "$REPO" ]; then
   echo "-- ERROR:  Could not identify Repo."
   exit 1
