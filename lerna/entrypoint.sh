@@ -207,7 +207,7 @@ else
   git checkout master
   git pull --rebas  git pull --rebase -fe -f
   git pull origin master -f
-  lerna publish --no-verify-access --from-package minor --yes > ${GITHUB_WORKSPACE}/publish.log
+  lerna publish from-package minor --no-verify-access --yes > ${GITHUB_WORKSPACE}/publish.log
   PUBLISH_COMMENT="Here is the logfile for the last publish:"
   /bin/slack file upload --file ${GITHUB_WORKSPACE}/publish.log --filetype log --channels '#deploys' --comment "${PUBLISH_COMMENT}" --title 'Log Incoming!'
 fi
