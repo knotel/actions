@@ -34,7 +34,9 @@ else
         wait $JESTPID1
         echo "jest process id ${JESTPID1} finished running in ${service:1:${#service}-2}"
         sleep 2
+        echo "Sending reports back to github..."
         cat report.json | /usr/bin/jest-action
+        echo "Done sending reports back to github!"
         cd ${GITHUB_WORKSPACE}/coverage/${PROJECT}
         echo "Contents of /coverage/${PROJECT}:"
         ls -al
