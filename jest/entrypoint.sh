@@ -49,8 +49,12 @@ else
   echo
   if [[ -z "${AWS_DEFAULT_REGION}" ]]; then
     exit 1
-  else
+  fi
+  if [[ -d ${GITHUB_WORKSPACE}/coverage ]]; then
     cd ${GITHUB_WORKSPACE}/coverage
     ../tools/cicd/upload_coverage_report_auth.sh
+  else
+    echo "Coverage directory doesn't exist!"
+    exit 0
   fi
 fi
