@@ -151,7 +151,7 @@ if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
       /bin/slack file upload --file ${GITHUB_WORKSPACE}/diff.patch --filetype patch --channels '#deploys' --comment "${DIFF_COMMENT}" --title 'Patch Incoming!'
 
       #Run the publish command and save the output into a logfile
-      lerna publish --no-verify-access minor --yes > ${GITHUB_WORKSPACE}/publish.log
+      lerna publish --no-verify-access --from-package minor --yes > ${GITHUB_WORKSPACE}/publish.log
       PUBLISH_COMMENT="Here is the logfile for the last publish:"
       /bin/slack file upload --file ${GITHUB_WORKSPACE}/publish.log --filetype log --channels '#deploys' --comment "${PUBLISH_COMMENT}" --title 'Log Incoming!'
     fi
@@ -204,7 +204,7 @@ else
   /bin/slack file upload --file ${GITHUB_WORKSPACE}/diff.patch --filetype patch --channels '#deploys' --comment "${DIFF_COMMENT}" --title 'Patch Incoming!'
 
   #Run the publish command and save the output into a logfile
-  lerna publish --no-verify-access minor --yes > ${GITHUB_WORKSPACE}/publish.log
+  lerna publish --no-verify-access --from-package minor --yes > ${GITHUB_WORKSPACE}/publish.log
   PUBLISH_COMMENT="Here is the logfile for the last publish:"
   /bin/slack file upload --file ${GITHUB_WORKSPACE}/publish.log --filetype log --channels '#deploys' --comment "${PUBLISH_COMMENT}" --title 'Log Incoming!'
 fi
