@@ -205,7 +205,6 @@ else
 
   #Run the publish command and save the output into a logfile
   git checkout master 2>&1
-  git pull --rebase -f 2>&1
   git pull origin master -f 2>&1
   lerna publish from-package minor --no-verify-access --yes > ${GITHUB_WORKSPACE}/publish.log
   PUBLISH_COMMENT="Here is the logfile for the last publish:"
