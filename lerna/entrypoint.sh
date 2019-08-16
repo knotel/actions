@@ -122,7 +122,7 @@ if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
       echo "last commit was publish"
       exit 0
     else
-      LERNA_CHANGED=`lerna changed exit 2>&1`
+      LERNA_CHANGED=`lerna changed 2>&1`
 
       if [[ ${LERNA_CHANGED} == *'No changed packages found'* ]]; then
         echo "No package bumps detected!"
@@ -164,7 +164,7 @@ if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
 else
   echo "Last commit is a merge. Starting Lerna workflow."
   echo "Getting output of what's changed from lerna."
-  LERNA_CHANGED=`lerna changed exit 2>&1`
+  LERNA_CHANGED=`lerna changed 2>&1`
 
   if [[ ${LERNA_CHANGED} == *'No changed packages found'* ]]; then
     echo "No package bumps detected!"
