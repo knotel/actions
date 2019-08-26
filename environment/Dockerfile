@@ -2,7 +2,8 @@ FROM mikefarah/yq
 
 # Install xml-to-json
 WORKDIR /bin
-RUN apk add jq bash
+RUN apk update && apk add --no-cache --virtual ca-certificates
+RUN apk add jq bash curl
 
 WORKDIR /github/workspace
 
