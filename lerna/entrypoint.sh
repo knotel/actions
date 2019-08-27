@@ -4,7 +4,7 @@ set -e
 
 #This script might require you to set the following secrets in your repo:
 #REPO_URL: ${{ secrets.REPO_URL }}
-#USER: ${{ secrets.USER }}
+#GIT_USER: ${{ secrets.GIT_USER }}
 #REPO: ${{ secrets.REPO }}
 
 #alias git=hub
@@ -72,10 +72,10 @@ if [ -z "$REPO_URL" ]; then
 fi
 
 #Check to see if this is availible in the secrets, if not, build it below.
-if [ -z "$USER" ]; then
-  USER=`echo $REPO_URL | sed -Ene's#https://github.com/([^/]*)/(.*).git#\1#p'`
+if [ -z "$GIT_USER" ]; then
+  GIT_USER=`echo $REPO_URL | sed -Ene's#https://github.com/([^/]*)/(.*).git#\1#p'`
 fi
-if [ -z "$USER" ]; then
+if [ -z "$GIT_USER" ]; then
   echo "-- ERROR:  Could not identify User."
   exit 1
 fi
@@ -89,7 +89,7 @@ if [ -z "$REPO" ]; then
   exit 1
 fi
 
-NEW_URL="git@github.com:$USER/$REPO.git"
+NEW_URL="git@github.com:$GIT_USER/$REPO.git"
 git remote set-url origin $NEW_URL
 
 if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
