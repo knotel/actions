@@ -3,6 +3,7 @@
   "private": true,
   "main": "index.js",
   "dependencies": {
+    "@octokit/endpoint": "^5.3.5",
     "actions-toolkit": "2.1.0"
   }
 }
