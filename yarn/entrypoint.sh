@@ -49,7 +49,6 @@ else
         echo "Exiting loop!"
       else
         echo "${service:1:${#service}-2} is not valid"
-        exit 1
       fi
     fi
   done
