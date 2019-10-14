@@ -22,12 +22,15 @@ if [[ -n "$NPM_TOKEN" ]]; then
   chmod 0600 "$NPM_CONFIG_USERCONFIG"
   printf "//%s/:_authToken=%s" "$NPM_REGISTRY_URL" "$NPM_TOKEN" > "${HOME}/.npmrc"
   chmod 0600 "$NPM_CONFIG_USERCONFIG"
-  echo "unsafe-perm = true" >> ~/.npmrc
 fi
 
 echo "Running npm whoami now:"
 npm whoami
 echo "Finished running npm whoami now:"
+
+echo "Running npm unsafe perms set to true"
+npm config set unsafe-perm true
+echo "Finished running npm unsafe perms set to true"
 
 function add_key() {
   mkdir -p ${THE_GITHUB_WORKSPACE}/.ssh
