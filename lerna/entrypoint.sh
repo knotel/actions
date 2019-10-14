@@ -22,6 +22,7 @@ if [[ -n "$NPM_TOKEN" ]]; then
   chmod 0600 "$NPM_CONFIG_USERCONFIG"
   printf "//%s/:_authToken=%s" "$NPM_REGISTRY_URL" "$NPM_TOKEN" > "${HOME}/.npmrc"
   chmod 0600 "$NPM_CONFIG_USERCONFIG"
+  echo "unsafe-perm = true" >> ~/.npmrc
 fi
 
 echo "Running npm whoami now:"
