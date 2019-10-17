@@ -63,14 +63,10 @@ try {
 try {
   console.log('RUNNING TEMPORARY DEPLOY HACK')
   // TEMPORARY HACK TO DEPLOY
-  FILES.push([
-    'environments/prod.yaml',
-    'environments/stage.yaml',
-  ])
-  FILES_MODIFIED.push([
-    'environments/prod.yaml',
-    'environments/stage.yaml',
-  ])
+  FILES.push('environments/prod.yaml')
+  FILES.push('environments/stage.yaml')
+  FILES_MODIFIED.push('environments/prod.yaml')
+  FILES_MODIFIED.push('environments/stage.yaml')
   for (let i = 0 , len = FILES_MODIFIED.length; i < len; i++) {
     let path_segments = FILES_MODIFIED[i].split('/')
     let service_name = path_segments[0]
