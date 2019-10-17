@@ -65,6 +65,8 @@ try {
   // TEMPORARY HACK TO DEPLOY
   FILES.push('frontend/atlas/src/App.jsx')
   FILES_MODIFIED.push('frontend/atlas/src/App.jsx')
+  FILES.push('environments/stage.yaml')
+  FILES_MODIFIED.push('environments/stage.yaml')
   for (let i = 0 , len = FILES_MODIFIED.length; i < len; i++) {
     let path_segments = FILES_MODIFIED[i].split('/')
     let service_name = path_segments[0]
