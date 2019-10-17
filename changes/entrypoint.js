@@ -58,6 +58,10 @@ try {
   });
 } catch (e) {
   console.log('Oh no something went wrong', JSON.stringify(e, null, 2))
+}
+
+if (FILES === []) {
+try {
   // TEMPORARY HACK TO DEPLOY
   FILES.push([
     'environments/prod.yaml',
@@ -77,6 +81,9 @@ try {
       tmp_services.push(service_name);
     }
   }
+} catch (e) {
+  console.log('Oh no something went wrong', JSON.stringify(e, null, 2))
+}
 }
 
 const SERVICES = tmp_services.filter((v, i, a) => a.indexOf(v) === i); 
