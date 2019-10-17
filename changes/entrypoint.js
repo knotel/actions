@@ -60,7 +60,6 @@ try {
   console.log('Oh no something went wrong in iterating over commits', JSON.stringify(e, null, 2))
 }
 
-if (FILES === []) {
 try {
   console.log('RUNNING TEMPORARY DEPLOY HACK')
   // TEMPORARY HACK TO DEPLOY
@@ -84,7 +83,6 @@ try {
   }
 } catch (e) {
   console.log('Oh no something went wrong in deploy hack', JSON.stringify(e, null, 2))
-}
 }
 
 console.log('Files: ', FILES)
