@@ -57,11 +57,12 @@ try {
     }
   });
 } catch (e) {
-  console.log('Oh no something went wrong', JSON.stringify(e, null, 2))
+  console.log('Oh no something went wrong in iterating over commits', JSON.stringify(e, null, 2))
 }
 
 if (FILES === []) {
 try {
+  console.log('RUNNING TEMPORARY DEPLOY HACK')
   // TEMPORARY HACK TO DEPLOY
   FILES.push([
     'environments/prod.yaml',
@@ -82,9 +83,13 @@ try {
     }
   }
 } catch (e) {
-  console.log('Oh no something went wrong', JSON.stringify(e, null, 2))
+  console.log('Oh no something went wrong in deploy hack', JSON.stringify(e, null, 2))
 }
 }
+
+console.log('Files: ', FILES)
+console.log('Files Modified: ', FILES_MODIFIED)
+console.log('Tmp Services: ', tmp_services)
 
 const SERVICES = tmp_services.filter((v, i, a) => a.indexOf(v) === i); 
 
