@@ -18,43 +18,47 @@ const FILES_DELETED  = [];
 
 const tmp_services = []
 console.log(JSON.stringify(commits, null, 2))
-commits.forEach(commit => {
-  console.log(JSON.stringify(commit, null, 2))
-  FILES.push(...commit.modified, ...commit.added);
-  FILES_MODIFIED.push(...commit.modified);
-  FILES_ADDED.push(...commit.added);
-  FILES_DELETED.push(...commit.removed);
-  for (let i = 0 , len = commit.added.length; i < len; i++) {
-    let path_segments = commit.added[i].split('/')
-    let service_name = path_segments[0]
-    if (path_segments[1] !== undefined) {
-      service_name += "/" + path_segments[1]
-      path_segments.shift()
-      const service_file_path = path_segments.join('/')
-      tmp_services.push(service_name);
+try {
+  commits.forEach(commit => {
+    console.log(JSON.stringify(commit, null, 2))
+    FILES.push(...commit.modified, ...commit.added);
+    FILES_MODIFIED.push(...commit.modified);
+    FILES_ADDED.push(...commit.added);
+    FILES_DELETED.push(...commit.removed);
+    for (let i = 0 , len = commit.added.length; i < len; i++) {
+      let path_segments = commit.added[i].split('/')
+      let service_name = path_segments[0]
+      if (path_segments[1] !== undefined) {
+        service_name += "/" + path_segments[1]
+        path_segments.shift()
+        const service_file_path = path_segments.join('/')
+        tmp_services.push(service_name);
+      }
     }
-  }
-  for (let i = 0 , len = commit.removed.length; i < len; i++) {
-    let path_segments = commit.removed[i].split('/')
-    let service_name = path_segments[0]
-    if (path_segments[1] !== undefined) {
-      service_name += "/" + path_segments[1]
-      path_segments.shift()
-      const service_file_path = path_segments.join('/')
-      tmp_services.push(service_name);
+    for (let i = 0 , len = commit.removed.length; i < len; i++) {
+      let path_segments = commit.removed[i].split('/')
+      let service_name = path_segments[0]
+      if (path_segments[1] !== undefined) {
+        service_name += "/" + path_segments[1]
+        path_segments.shift()
+        const service_file_path = path_segments.join('/')
+        tmp_services.push(service_name);
+      }
     }
-  }
-  for (let i = 0 , len = commit.modified.length; i < len; i++) {
-    let path_segments = commit.modified[i].split('/')
-    let service_name = path_segments[0]
-    if (path_segments[1] !== undefined) {
-      service_name += "/" + path_segments[1]
-      path_segments.shift()
-      const service_file_path = path_segments.join('/')
-      tmp_services.push(service_name);
+    for (let i = 0 , len = commit.modified.length; i < len; i++) {
+      let path_segments = commit.modified[i].split('/')
+      let service_name = path_segments[0]
+      if (path_segments[1] !== undefined) {
+        service_name += "/" + path_segments[1]
+        path_segments.shift()
+        const service_file_path = path_segments.join('/')
+        tmp_services.push(service_name);
+      }
     }
-  }
-});
+  });
+} catch (e) {
+  console.log('Oh no something went wrong', JSON.stringify(e, null, 2))
+}
 
 const SERVICES = tmp_services.filter((v, i, a) => a.indexOf(v) === i); 
 
