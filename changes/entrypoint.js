@@ -3,7 +3,7 @@ const github = require('@actions/github')
 const token = process.env.GITHUB_TOKEN;
 
 const octokit = new github.GitHub(token);
-const context = octokit.context;
+const context = github.context;
 
 //context here is example.json
 const fs = require('fs');
