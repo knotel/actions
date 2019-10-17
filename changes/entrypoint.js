@@ -12,6 +12,7 @@ const FILES_ADDED    = [];
 const FILES_DELETED  = [];
 
 const tmp_services = []
+console.log(JSON.stringify(commits))
 commits.forEach(commit => {
     FILES.push(...commit.modified, ...commit.added);
     FILES_MODIFIED.push(...commit.modified);
