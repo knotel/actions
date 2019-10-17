@@ -1,7 +1,6 @@
 const github = require('@actions/github')
 
 const token = process.env.GITHUB_TOKEN;
-const github = require('@actions/github');
 const context = new github.GitHub(token);
 //context here is example.json
 const fs = require('fs');
