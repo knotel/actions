@@ -5,6 +5,8 @@ const github = require('@actions/github');
 const context = new github.GitHub(token);
 //context here is example.json
 const fs = require('fs');
+
+console.log(context)
 const commits = context.payload.commits.filter(c => c.distinct);
 
 const FILES          = [];
