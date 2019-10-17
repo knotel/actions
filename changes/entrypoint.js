@@ -1,4 +1,4 @@
-import * as github from '@actions/github';
+const github = require('@actions/github')
 
 const token: string = process.env.GITHUB_TOKEN || '';
 const github = require('@actions/github');
