@@ -59,14 +59,14 @@ try {
 } catch (e) {
   console.log('Oh no something went wrong', JSON.stringify(e, null, 2))
   // TEMPORARY HACK TO DEPLOY
-  FILES = [
+  FILES.push([
     'environments/prod.yaml',
     'environments/stage.yaml',
-  ]
-  FILES_MODIFIED = [
+  ])
+  FILES_MODIFIED.push([
     'environments/prod.yaml',
     'environments/stage.yaml',
-  ]
+  ])
 }
 
 const SERVICES = tmp_services.filter((v, i, a) => a.indexOf(v) === i); 
