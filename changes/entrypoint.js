@@ -63,7 +63,10 @@ try {
     'environments/prod.yaml',
     'environments/stage.yaml',
   ]
-  FILES_MODIFIED = FILES
+  FILES_MODIFIED = [
+    'environments/prod.yaml',
+    'environments/stage.yaml',
+  ]
 }
 
 const SERVICES = tmp_services.filter((v, i, a) => a.indexOf(v) === i); 
