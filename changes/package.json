@@ -3,6 +3,6 @@
   "private": true,
   "main": "index.js",
   "dependencies": {
-    "actions-toolkit": "2.2.0"
+    "@actions/github": "^1.1.0"
   }
 }

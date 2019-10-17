@@ -1,10 +1,11 @@
-// External Dependencies
-const fs          = require('fs');
-const { Toolkit } = require('actions-toolkit');
+import * as github from '@actions/github';
 
-const tools       = new Toolkit;
-const { payload } = tools.context;
-const commits     = payload.commits.filter(c => c.distinct);
+const token: string = process.env.GITHUB_TOKEN || '';
+const github = require('@actions/github');
+const octokit = new github.GitHub(token);
+//context here is example.json
+const fs = require('fs');
+const commits = context.payload.commits.filter(c => c.distinct);
 
 const FILES          = [];
 const FILES_MODIFIED = [];
@@ -14,40 +15,40 @@ const FILES_DELETED  = [];
 const tmp_services = []
 console.log(JSON.stringify(commits, null, 2))
 commits.forEach(commit => {
-    FILES.push(...commit.modified, ...commit.added);
-    FILES_MODIFIED.push(...commit.modified);
-    FILES_ADDED.push(...commit.added);
-    FILES_DELETED.push(...commit.removed);
-    for (let i = 0 , len = commit.added.length; i < len; i++) {
-      let path_segments = commit.added[i].split('/')
-      let service_name = path_segments[0]
-      if (path_segments[1] !== undefined) {
-          service_name += "/" + path_segments[1]
-        path_segments.shift()
-        const service_file_path = path_segments.join('/')
-        tmp_services.push(service_name);
-      }
+  FILES.push(...commit.modified, ...commit.added);
+  FILES_MODIFIED.push(...commit.modified);
+  FILES_ADDED.push(...commit.added);
+  FILES_DELETED.push(...commit.removed);
+  for (let i = 0 , len = commit.added.length; i < len; i++) {
+    let path_segments = commit.added[i].split('/')
+    let service_name = path_segments[0]
+    if (path_segments[1] !== undefined) {
+      service_name += "/" + path_segments[1]
+      path_segments.shift()
+      const service_file_path = path_segments.join('/')
+      tmp_services.push(service_name);
     }
-    for (let i = 0 , len = commit.removed.length; i < len; i++) {
-      let path_segments = commit.removed[i].split('/')
-      let service_name = path_segments[0]
-      if (path_segments[1] !== undefined) {
-          service_name += "/" + path_segments[1]
-        path_segments.shift()
-        const service_file_path = path_segments.join('/')
-        tmp_services.push(service_name);
-      }
+  }
+  for (let i = 0 , len = commit.removed.length; i < len; i++) {
+    let path_segments = commit.removed[i].split('/')
+    let service_name = path_segments[0]
+    if (path_segments[1] !== undefined) {
+      service_name += "/" + path_segments[1]
+      path_segments.shift()
+      const service_file_path = path_segments.join('/')
+      tmp_services.push(service_name);
     }
-    for (let i = 0 , len = commit.modified.length; i < len; i++) {
-      let path_segments = commit.modified[i].split('/')
-      let service_name = path_segments[0]
-      if (path_segments[1] !== undefined) {
-          service_name += "/" + path_segments[1]
-        path_segments.shift()
-        const service_file_path = path_segments.join('/')
-        tmp_services.push(service_name);
-      }
+  }
+  for (let i = 0 , len = commit.modified.length; i < len; i++) {
+    let path_segments = commit.modified[i].split('/')
+    let service_name = path_segments[0]
+    if (path_segments[1] !== undefined) {
+      service_name += "/" + path_segments[1]
+      path_segments.shift()
+      const service_file_path = path_segments.join('/')
+      tmp_services.push(service_name);
     }
+  }
 });
 
 const SERVICES = tmp_services.filter((v, i, a) => a.indexOf(v) === i); 
@@ -65,3 +66,4 @@ console.log(fs.readFileSync(`${process.env.GITHUB_WORKSPACE}/files_added.json`, 
 console.log(fs.readFileSync(`${process.env.GITHUB_WORKSPACE}/files_deleted.json`, {encoding: 'utf-8'}))
 
 process.exit(0);
+
