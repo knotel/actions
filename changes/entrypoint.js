@@ -14,6 +14,7 @@ const FILES_DELETED  = [];
 const tmp_services = []
 console.log(JSON.stringify(commits, null, 2))
 commits.forEach(commit => {
+  if (commit.modified) {
     FILES.push(...commit.modified, ...commit.added);
     FILES_MODIFIED.push(...commit.modified);
     FILES_ADDED.push(...commit.added);
@@ -48,6 +49,7 @@ commits.forEach(commit => {
         tmp_services.push(service_name);
       }
     }
+  }
 });
 
 const SERVICES = tmp_services.filter((v, i, a) => a.indexOf(v) === i); 
