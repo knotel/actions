@@ -60,31 +60,6 @@ try {
   console.log('Oh no something went wrong in iterating over commits', JSON.stringify(e, null, 2))
 }
 
-try {
-  console.log('RUNNING TEMPORARY DEPLOY HACK')
-  // TEMPORARY HACK TO DEPLOY
-  FILES.push('environments/prod.yaml')
-  FILES.push('environments/stage.yaml')
-  FILES_MODIFIED.push('environments/prod.yaml')
-  FILES_MODIFIED.push('environments/stage.yaml')
-  for (let i = 0 , len = FILES_MODIFIED.length; i < len; i++) {
-    let path_segments = FILES_MODIFIED[i].split('/')
-    let service_name = path_segments[0]
-    if (path_segments[1] !== undefined) {
-      service_name += "/" + path_segments[1]
-      path_segments.shift()
-      const service_file_path = path_segments.join('/')
-      tmp_services.push(service_name);
-    }
-  }
-} catch (e) {
-  console.log('Oh no something went wrong in deploy hack', JSON.stringify(e, null, 2))
-}
-
-console.log('Files: ', FILES)
-console.log('Files Modified: ', FILES_MODIFIED)
-console.log('Tmp Services: ', tmp_services)
-
 const SERVICES = tmp_services.filter((v, i, a) => a.indexOf(v) === i); 
 
 fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/services.json`, JSON.stringify(SERVICES), 'utf-8');
