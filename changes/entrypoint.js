@@ -2,7 +2,7 @@ import * as github from '@actions/github';
 
 const token: string = process.env.GITHUB_TOKEN || '';
 const github = require('@actions/github');
-const octokit = new github.GitHub(token);
+const context = new github.GitHub(token);
 //context here is example.json
 const fs = require('fs');
 const commits = context.payload.commits.filter(c => c.distinct);
