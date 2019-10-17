@@ -58,6 +58,12 @@ try {
   });
 } catch (e) {
   console.log('Oh no something went wrong', JSON.stringify(e, null, 2))
+  // TEMPORARY HACK TO DEPLOY
+  FILES = [
+    'environments/prod.yaml',
+    'environments/stage.yaml',
+  ]
+  FILES_MODIFIED = FILES
 }
 
 const SERVICES = tmp_services.filter((v, i, a) => a.indexOf(v) === i); 
