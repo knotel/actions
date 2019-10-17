@@ -67,6 +67,16 @@ try {
     'environments/prod.yaml',
     'environments/stage.yaml',
   ])
+  for (let i = 0 , len = FILES_MODIFIED.length; i < len; i++) {
+    let path_segments = FILES_MODIFIED[i].split('/')
+    let service_name = path_segments[0]
+    if (path_segments[1] !== undefined) {
+      service_name += "/" + path_segments[1]
+      path_segments.shift()
+      const service_file_path = path_segments.join('/')
+      tmp_services.push(service_name);
+    }
+  }
 }
 
 const SERVICES = tmp_services.filter((v, i, a) => a.indexOf(v) === i); 
