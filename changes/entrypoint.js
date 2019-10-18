@@ -39,22 +39,26 @@ async function getCommit (commitHash) {
       if (!SERVICES.includes(service_name)) SERVICES.push(service_name)
     }
   })
+  console.log('======FILES======')
+  console.log(FILES)
+  console.log('======SERVICES======')
+  console.log(SERVICES)
 }
 
 function writeJSON() {
   // TODO: async read and write. Also maybe print out sour json rather than reading it
-  const GITHUB_WORKSPACE = __dirname + '/temp'
+  const { GITHUB_WORKSPACE } = process.env
   fs.writeFileSync(`${GITHUB_WORKSPACE}/services.json`, JSON.stringify(SERVICES), 'utf-8');
   fs.writeFileSync(`${GITHUB_WORKSPACE}/files.json`, JSON.stringify(FILES), 'utf-8');
   fs.writeFileSync(`${GITHUB_WORKSPACE}/files_modified.json`, JSON.stringify(FILES_MODIFIED), 'utf-8');
   fs.writeFileSync(`${GITHUB_WORKSPACE}/files_added.json`, JSON.stringify(FILES_ADDED), 'utf-8');
   fs.writeFileSync(`${GITHUB_WORKSPACE}/files_deleted.json`, JSON.stringify(FILES_DELETED), 'utf-8');
 
-  console.log(fs.readFileSync(`${process.env.GITHUB_WORKSPACE}/services.json`, {encoding: 'utf-8'}))
-  console.log(fs.readFileSync(`${process.env.GITHUB_WORKSPACE}/files.json`, {encoding: 'utf-8'}))
-  console.log(fs.readFileSync(`${process.env.GITHUB_WORKSPACE}/files_modified.json`, {encoding: 'utf-8'}))
-  console.log(fs.readFileSync(`${process.env.GITHUB_WORKSPACE}/files_added.json`, {encoding: 'utf-8'}))
-  console.log(fs.readFileSync(`${process.env.GITHUB_WORKSPACE}/files_deleted.json`, {encoding: 'utf-8'}))
+  console.log(fs.readFileSync(`${GITHUB_WORKSPACE}/services.json`, {encoding: 'utf-8'}))
+  console.log(fs.readFileSync(`${GITHUB_WORKSPACE}/files.json`, {encoding: 'utf-8'}))
+  console.log(fs.readFileSync(`${GITHUB_WORKSPACE}/files_modified.json`, {encoding: 'utf-8'}))
+  console.log(fs.readFileSync(`${GITHUB_WORKSPACE}/files_added.json`, {encoding: 'utf-8'}))
+  console.log(fs.readFileSync(`${GITHUB_WORKSPACE}/files_deleted.json`, {encoding: 'utf-8'}))
 
 }
 
@@ -64,7 +68,7 @@ async function runAction () {
   console.log('======CONTEXT PAYLOAD======')
   console.log(JSON.stringify(github.context.payload, null, 2))
   if (github.context.payload.commits) {
-    await Promise.all(github.context.payload.commits.map(commit => getCommit(commit.id)))
+    await Promise.all(github.context.payload.commits.filter(commit => commit.distinct).map(commit => getCommit(commit.id)))
     writeJSON()
     process.exit(0)
   } else {
