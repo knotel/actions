@@ -15,7 +15,6 @@ const FILES_DELETED  = [];
 const SERVICES = []
 
 async function getCommit (commitHash) {
-  console.log(`requesting with user ${process.env.GITHUB_ACTOR}`)
   const { data: { files }} = await axios.get(`https://api.github.com/repos/knotel/mono/commits/${commitHash}`, {
     auth: {
       username: process.env.GITHUB_ACTOR,
@@ -39,10 +38,6 @@ async function getCommit (commitHash) {
       if (!SERVICES.includes(service_name)) SERVICES.push(service_name)
     }
   })
-  console.log('======FILES======')
-  console.log(FILES)
-  console.log('======SERVICES======')
-  console.log(SERVICES)
 }
 
 function writeJSON() {
