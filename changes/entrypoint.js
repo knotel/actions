@@ -24,13 +24,13 @@ async function getCommit (commitHash) {
   })
   files.forEach(file => {
     if (file.status === 'modified') {
-      FILES.push(file)
-      FILES_MODIFIED.push(file)
+      FILES.push(file.filename)
+      FILES_MODIFIED.push(file.filename)
     } else if (file.status === 'added') {
-      FILES.push(file)
-      FILES_ADDED.push(file)
+      FILES.push(file.filename)
+      FILES_ADDED.push(file.filename)
     } else if (file.status === 'removed') {
-      FILES_DELETED.push(file)
+      FILES_DELETED.push(file.filename)
     }
     let path_segments = file.filename.split('/')
     let service_name = path_segments[0]
