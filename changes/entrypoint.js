@@ -15,29 +15,33 @@ const FILES_DELETED  = [];
 const SERVICES = []
 
 async function getCommit (commitHash) {
-  const { data: { files }} = await axios.get(`https://api.github.com/repos/knotel/mono/commits/${commitHash}`, {
-    auth: {
-      username: process.env.GITHUB_ACTOR,
-      password: token
+  try {
+    const { data: { files }} = await axios.get(`https://api.github.com/repos/knotel/mono/commits/${commitHash}`, {
+      auth: {
+        username: process.env.GITHUB_ACTOR,
+        password: token
+      }
+    })
+    for (const file of files) {
+      if (file.status === 'modified') {
+        FILES.push(file.filename)
+        FILES_MODIFIED.push(file.filename)
+      } else if (file.status === 'added') {
+        FILES.push(file.filename)
+        FILES_ADDED.push(file.filename)
+      } else if (file.status === 'removed') {
+        FILES_DELETED.push(file.filename)
+      }
+      let path_segments = file.filename.split('/')
+      let service_name = path_segments[0]
+      if (path_segments[1] !== undefined) {
+        service_name += "/" + path_segments[1]
+        if (!SERVICES.includes(service_name)) SERVICES.push(service_name)
+      }
     }
-  })
-  files.forEach(file => {
-    if (file.status === 'modified') {
-      FILES.push(file.filename)
-      FILES_MODIFIED.push(file.filename)
-    } else if (file.status === 'added') {
-      FILES.push(file.filename)
-      FILES_ADDED.push(file.filename)
-    } else if (file.status === 'removed') {
-      FILES_DELETED.push(file.filename)
-    }
-    let path_segments = file.filename.split('/')
-    let service_name = path_segments[0]
-    if (path_segments[1] !== undefined) {
-      service_name += "/" + path_segments[1]
-      if (!SERVICES.includes(service_name)) SERVICES.push(service_name)
-    }
-  })
+  } catch (err) {
+    throw err
+  }
 }
 
 function writeJSON() {
