@@ -139,6 +139,10 @@ if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
       echo "Getting output of what's changed from lerna."
       lerna changed --json > ${GITHUB_WORKSPACE}/changed.json || true
       echo "Saved output to workspace in ${GITHUB_WORKSPACE}/changed.json"
+      
+      cat ${GITHUB_WORKSPACE}/changed.json | jq .[].location -r | while read line ; do echo "running yarn in $line" && cd $line && yarn || true ; done
+      cd ${GITHUB_WORKSPACE}
+      
       echo "Changed:"
       cat ${GITHUB_WORKSPACE}/changed.json
       LERNA_CHANGED="\`\`\`"
@@ -181,6 +185,9 @@ else
   echo "Saved output to workspace in ${GITHUB_WORKSPACE}/changed.json"
   echo "Changed:"
   cat ${GITHUB_WORKSPACE}/changed.json
+  
+  cat ${GITHUB_WORKSPACE}/changed.json | jq .[].location -r | while read line ; do echo "running yarn in $line" && cd $line && yarn || true ; done
+  cd ${GITHUB_WORKSPACE}
 
   LERNA_CHANGED="\`\`\`"
   LERNA_CHANGED+=$(cd ${GITHUB_WORKSPACE} && lerna changed -la || true)
