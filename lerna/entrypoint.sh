@@ -2,6 +2,9 @@
 
 # set -e
 
+#Do not exit on error
+set +e
+
 #This script might require you to set the following secrets in your repo:
 #REPO_URL: ${{ secrets.REPO_URL }}
 #GIT_USER: ${{ secrets.GIT_USER }}
@@ -203,13 +206,29 @@ else
   git rev-parse HEAD
 
   #Generate a diff.patch file for the last version bump
+  echo "Generate a diff.patch file for the last version bump"
   lerna diff > ${GITHUB_WORKSPACE}/diff.patch || true
   DIFF_COMMENT="Here is a diff patch with all the changes since the last publish:"
   /bin/slack file upload --file ${GITHUB_WORKSPACE}/diff.patch --filetype patch --channels '#deploys' --comment "${DIFF_COMMENT}" --title 'Patch Incoming!'
 
   #Run the publish command and save the output into a logfile
   git fetch --tags 2>&1
+  echo "Run the publish command and save the output into a logfile"
   lerna publish minor --no-verify-access --yes > ${GITHUB_WORKSPACE}/publish.log || true
   PUBLISH_COMMENT="Here is the logfile for the last publish:"
   /bin/slack file upload --file ${GITHUB_WORKSPACE}/publish.log --filetype log --channels '#deploys' --comment "${PUBLISH_COMMENT}" --title 'Log Incoming!'
+
+  echo "about to do last git pull of script"
+  cd ${GITHUB_WORKSPACE}
+  git clean -f
+  git pull origin master
+  git checkout master -f
+  git config --global push.default current
+  git clean -f
+  git pull origin master
+  echo "Pulled newest changes."
+  echo
+  echo "Current HEAD is at:"
+  git rev-parse HEAD
+
 fi
