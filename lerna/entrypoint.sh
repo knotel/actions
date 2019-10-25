@@ -1,6 +1,6 @@
 #!/bin/bash -l
 
-set -e
+# set -e
 
 #This script might require you to set the following secrets in your repo:
 #REPO_URL: ${{ secrets.REPO_URL }}
@@ -134,12 +134,12 @@ if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
       fi
       #run the lerna publish workflow
       echo "Getting output of what's changed from lerna."
-      lerna changed --json > ${GITHUB_WORKSPACE}/changed.json
+      lerna changed --json > ${GITHUB_WORKSPACE}/changed.json || true
       echo "Saved output to workspace in ${GITHUB_WORKSPACE}/changed.json"
       echo "Changed:"
       cat ${GITHUB_WORKSPACE}/changed.json
       LERNA_CHANGED="\`\`\`"
-      LERNA_CHANGED+=$(cd ${GITHUB_WORKSPACE} && lerna changed -la)
+      LERNA_CHANGED+=$(cd ${GITHUB_WORKSPACE} && lerna changed -la || true)
       LERNA_CHANGED+="\`\`\`"
       PRETEXT="The following packages have had a minor version bump."
       /bin/slack chat send \
@@ -150,12 +150,12 @@ if [ $(git cat-file -p $(git rev-parse HEAD) | grep parent | wc -l) = 1 ]; then
         --text "${LERNA_CHANGED}"
 
       #Generate a diff.patch file for the last version bump
-      lerna diff > ${GITHUB_WORKSPACE}/diff.patch
+      lerna diff > ${GITHUB_WORKSPACE}/diff.patch || true
       DIFF_COMMENT="Here is a diff patch with all the changes since the last publish:"
       /bin/slack file upload --file ${GITHUB_WORKSPACE}/diff.patch --filetype patch --channels '#deploys' --comment "${DIFF_COMMENT}" --title 'Patch Incoming!'
 
       #Run the publish command and save the output into a logfile
-      lerna publish --no-verify-access minor --yes > ${GITHUB_WORKSPACE}/publish.log
+      lerna publish --no-verify-access minor --yes > ${GITHUB_WORKSPACE}/publish.log || true
       PUBLISH_COMMENT="Here is the logfile for the last publish:"
       /bin/slack file upload --file ${GITHUB_WORKSPACE}/publish.log --filetype log --channels '#deploys' --comment "${PUBLISH_COMMENT}" --title 'Log Incoming!'
     fi
@@ -174,13 +174,13 @@ else
     echo "No package bumps detected!"
     exit 0
   fi
-  lerna changed --json > ${GITHUB_WORKSPACE}/changed.json
+  lerna changed --json > ${GITHUB_WORKSPACE}/changed.json || true
   echo "Saved output to workspace in ${GITHUB_WORKSPACE}/changed.json"
   echo "Changed:"
   cat ${GITHUB_WORKSPACE}/changed.json
 
   LERNA_CHANGED="\`\`\`"
-  LERNA_CHANGED+=$(cd ${GITHUB_WORKSPACE} && lerna changed -la)
+  LERNA_CHANGED+=$(cd ${GITHUB_WORKSPACE} && lerna changed -la || true)
   LERNA_CHANGED+="\`\`\`"
   PRETEXT="The following packages have had a minor version bump."
   /bin/slack chat send \
@@ -203,13 +203,13 @@ else
   git rev-parse HEAD
 
   #Generate a diff.patch file for the last version bump
-  lerna diff > ${GITHUB_WORKSPACE}/diff.patch
+  lerna diff > ${GITHUB_WORKSPACE}/diff.patch || true
   DIFF_COMMENT="Here is a diff patch with all the changes since the last publish:"
   /bin/slack file upload --file ${GITHUB_WORKSPACE}/diff.patch --filetype patch --channels '#deploys' --comment "${DIFF_COMMENT}" --title 'Patch Incoming!'
 
   #Run the publish command and save the output into a logfile
   git fetch --tags 2>&1
-  lerna publish minor --no-verify-access --yes > ${GITHUB_WORKSPACE}/publish.log
+  lerna publish minor --no-verify-access --yes > ${GITHUB_WORKSPACE}/publish.log || true
   PUBLISH_COMMENT="Here is the logfile for the last publish:"
   /bin/slack file upload --file ${GITHUB_WORKSPACE}/publish.log --filetype log --channels '#deploys' --comment "${PUBLISH_COMMENT}" --title 'Log Incoming!'
 fi
